@@ -19,7 +19,7 @@ func NewPolygon(vertices []float32) (*Polygon, error) {
 	if len(vertices) < 6 {
 		return nil, errors.New("Polygon must contain at least three points.")
 	}
-	return &Polygon{localVertices: vertices, dirty: true}, nil
+	return &Polygon{localVertices: vertices, dirty: true, scalar: Vector2{1,1}}, nil
 }
 
 func (p *Polygon) Vertices() []float32 {
