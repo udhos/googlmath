@@ -1,7 +1,7 @@
 package math
 
 import (
-	. "launchpad.net/gocheck"
+	. "gopkg.in/check.v1"
 )
 
 var Vector4Check = &Vector4Checker{}
