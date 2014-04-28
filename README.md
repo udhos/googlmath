@@ -8,6 +8,7 @@ If you use this library, do yourself a favour and check if the functions you use
 NOTE: The code is not checked for concurrency use (yet).
 
 Travis build status: [![Build Status](https://travis-ci.org/Agon/googlmath.png?branch=master)](https://travis-ci.org/Agon/googlmath)
+[![Coverage Status](https://coveralls.io/repos/Agon/googlmath/badge.png)](https://coveralls.io/r/Agon/googlmath)
 
 ## License
 This library is made available under the [Simplified BSD License](http://en.wikipedia.org/wiki/BSD_licenses#2-clause_license_.28.22Simplified_BSD_License.22_or_.22FreeBSD_License.22.29).

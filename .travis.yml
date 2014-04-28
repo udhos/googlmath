@@ -2,7 +2,11 @@ language: go
 go: 1.1.1
 install:
 - go get -u launchpad.net/gocheck
+- go get code.google.com/p/go.tools/cmd/cover
+- go get github.com/mattn/goveralls
 script:
 - go test -race -i
+- go test -covermode=count -coverprofile=profile.cov
 - go test -v -gocheck.v -race -cpu=2 ./...
 - go test -v -gocheck.v -race -gocheck.b -cpu=2 ./...
+- goveralls -coverprofile=profile.cov -service=travis-ci
