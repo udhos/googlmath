@@ -11,50 +11,208 @@ type Vector3TestSuite struct {
 var _ = Suite(&Vector3TestSuite{})
 
 func (s *Vector3TestSuite) Vec3(c *C) {
-	s.vec = Vec3(1.23, -3.21, -0.0)
-	c.Assert(s.vec, Equals, Vector3{1.23, -3.21, -0.0})
+	tests := []struct{ X, Y, Z float32 }{
+		{0, 0, 0},
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{-1, 0, 0},
+		{-1, 0, -1},
+		{-22.013, 0.125, 12.3},
+		{-0.013, 1.025, 10.01},
+	}
+	var vec Vector3
+	for _, t := range tests {
+		vec = Vec3(t.X, t.Y, t.Z)
+		c.Assert(vec, Equals, Vector3{t.X, t.Y, t.Z})
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Set(c *C) {
-	s.vec.Set(-2, 0, 1)
-	c.Assert(s.vec, Equals, Vector3{-2, 0, 1})
+	tests := []struct{ X, Y, Z float32 }{
+		{0, 0, 0},
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{-1, 0, 0},
+		{-1, 0, -1},
+		{-22.013, 0.125, 12.3},
+		{-0.013, 1.025, 10.01},
+	}
+	var vec Vector3
+	for _, t := range tests {
+		vec.Set(t.X, t.Y, t.Z)
+		c.Assert(vec, Equals, Vector3{t.X, t.Y, t.Z})
+	}
 }
 
 func (s *Vector3TestSuite) Vector3SetVec3(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	c.Assert(s.vec, Equals, Vector3{-2, 0, 1})
+	tests := []struct{ X, Y, Z float32 }{
+		{0, 0, 0},
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{-1, 0, 0},
+		{-1, 0, -1},
+		{-22.013, 0.125, 12.3},
+		{-0.013, 1.025, 10.01},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec2 = vec
+		vec.SetVec3(Vec3(t.X, t.Y, t.Z))
+		c.Assert(vec, Equals, Vector3{t.X, t.Y, t.Z})
+		c.Assert(vec, Not(Equals), vec2)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Cpy(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	vec := s.vec.Cpy()
-	c.Assert(s.vec, Equals, vec)
+	tests := []struct{ X, Y, Z float32 }{
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{-1, 0, 0},
+		{-1, 0, -1},
+		{-22.013, 0.125, 12.3},
+		{-0.013, 1.025, 10.01},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(t.X, t.Y, t.Z)
+		vec2 = Vec3(0, 0, 0)
+
+		vec2 = vec.Cpy()
+
+		c.Assert(vec, Equals, vec2)
+		c.Assert(vec, Not(Equals), Vec3(0, 0, 0))
+		c.Assert(vec2, Not(Equals), Vec3(0, 0, 0))
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Clr(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	vec := s.vec.Clr()
-	c.Assert(vec, Equals, Vector3{0, 0, 0})
+	tests := []struct{ X, Y, Z float32 }{
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{-1, 0, 0},
+		{-1, 0, -1},
+		{-22.013, 0.125, 12.3},
+		{-0.013, 1.025, 10.01},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(t.X, t.Y, t.Z)
+		vec2 = vec
+
+		vec.Clr()
+
+		c.Assert(vec, Equals, Vec3(0, 0, 0))
+		c.Assert(vec, Not(Equals), vec2)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Add(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	c.Assert(s.vec.Add(Vec3(2, 2, 1)), Equals, Vector3{0, 2, 2})
+	tests := []struct{ v1, v2, v3 Vector3 }{
+		{Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(0, 0, 0), Vec3(1, 0, 0)},
+		{Vec3(-1, 0, 0), Vec3(0, 0, 0), Vec3(-1, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(3, 0, 0), Vec3(4, 0, 0)},
+		{Vec3(-2, 22, -3.3), Vec3(-1.2, -2, 0.3), Vec3(-3.2, 20, -3)},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(0, 0, 0)
+		vec2 = Vec3(0, 0, 0)
+
+		vec = t.v1
+		vec2 = t.v1.Add(t.v2)
+
+		c.Assert(vec, Not(Equals), vec2)
+		c.Assert(vec, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v3)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Sub(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	c.Assert(s.vec.Sub(Vec3(2, 2, 1)), Equals, Vector3{-4, -2, -1})
+	tests := []struct{ v1, v2, v3 Vector3 }{
+		{Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(0, 0, 0), Vec3(1, 0, 0)},
+		{Vec3(-1, 0, 0), Vec3(0, 0, 0), Vec3(-1, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(3, 0, 0), Vec3(-2, 0, 0)},
+		{Vec3(-2, 22, -3.3), Vec3(-1.2, -2, 0.3), Vec3(-0.8, 24, -3.6)},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(0, 0, 0)
+		vec2 = Vec3(0, 0, 0)
+
+		vec = t.v1
+		vec2 = t.v1.Sub(t.v2)
+
+		c.Assert(vec, Not(Equals), vec2)
+		c.Assert(vec, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v3)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Mul(c *C) {
-	s.vec.SetVec3(Vec3(-2, 0, 1))
-	c.Assert(s.vec.Mul(Vec3(2, 2, -1)), Equals, Vector3{-4, 0, -1})
+	tests := []struct{ v1, v2, v3 Vector3 }{
+		{Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(-1, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(3, 0, 0), Vec3(3, 0, 0)},
+		{Vec3(-2, 22, -3.3), Vec3(-1.2, -2, 0.3), Vec3(2.4, -44, -1.1)},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(0, 0, 0)
+		vec2 = Vec3(0, 0, 0)
+
+		vec = t.v1
+		vec2 = t.v1.Mul(t.v2)
+
+		c.Assert(vec, Not(Equals), vec2)
+		c.Assert(vec, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v3)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Div(c *C) {
-	s.vec.SetVec3(Vec3(-2, 2, 1))
-	c.Assert(s.vec.Div(Vec3(2, 2, -1)), Equals, Vector3{-1, 1, -1})
+	tests := []struct{ v1, v2, v3 Vector3 }{
+		{Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(-1, 0, 0), Vec3(0, 0, 0), Vec3(0, 0, 0)},
+		{Vec3(1, 0, 0), Vec3(3, 0, 0), Vec3(1/3, 0, 0)},
+		{Vec3(-2, 22, -3.3), Vec3(-1.2, -2, 0.3), Vec3(-2/-1.2, -11, -9.9)},
+	}
+	var vec Vector3
+	var vec2 Vector3
+	for _, t := range tests {
+		vec = Vec3(0, 0, 0)
+		vec2 = Vec3(0, 0, 0)
+
+		vec = t.v1
+		vec2 = t.v1.Div(t.v2)
+
+		c.Assert(vec, Not(Equals), vec2)
+		c.Assert(vec, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v1)
+		c.Assert(vec2, Equals, t.v3)
+	}
 }
 
 func (s *Vector3TestSuite) Vector3Len(c *C) {
