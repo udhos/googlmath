@@ -38,7 +38,7 @@ func (vec Vector3) Cpy() Vector3 {
 	return Vector3{vec.X, vec.Y, vec.Z}
 }
 
-// Returns a zero vector
+// Clr sets the vector to a zero vector and returns itself
 func (vec Vector3) Clr() Vector3 {
 	vec.X = 0
 	vec.Y = 0
