@@ -10,23 +10,12 @@ type IsPointInTriangleTestValue struct {
 	Expected   bool
 }
 
-type IntersectorTestSuite struct {
-	containTestTable []IsPointInTriangleTestValue
-}
-
-var _ = Suite(&IntersectorTestSuite{})
-
-func (s *IntersectorTestSuite) SetUpTest(c *C) {
-	s.containTestTable = []IsPointInTriangleTestValue{
+func (s *S) TestIsPointInTriangle(c *C) {
+	containTestTable := []IsPointInTriangleTestValue{
 		IsPointInTriangleTestValue{Vec3(0.5, 0.5, 0), Vec3(0, 0, 0), Vec3(1, 1, 0), Vec3(0, 1, 0), true},
 		IsPointInTriangleTestValue{Vec3(2, 0.5, 0), Vec3(0, 0, 0), Vec3(1, 1, 0), Vec3(0, 1, 0), false},
 	}
-}
-
-func (s *IntersectorTestSuite) TestIsPointInTriangle(c *C) {
-
-	for i := range s.containTestTable {
-		value := s.containTestTable[i]
+	for _, value := range containTestTable {
 		c.Assert(IsPointInTriangle(value.Point, value.T1, value.T2, value.T3), Equals, value.Expected)
 	}
 }

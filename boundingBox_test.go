@@ -36,20 +36,8 @@ type BBVec3BoolTestValue struct {
 	Expected bool
 }
 
-type BoundingBoxTestSuite struct {
-	newBBTestTable       []BB2Vec3TestValue
-	isValidTestTable     []BBBoolTestValue
-	cornersTestTable     []BBVec3ArrayTestValue
-	dimensionTestTable   []BBVec3TestValue
-	containsTestTable    []BB2BoolTestValue
-	containsVecTestTable []BBVec3BoolTestValue
-	overlapsTestTable    []BB2BoolTestValue
-}
-
-var _ = Suite(&BoundingBoxTestSuite{})
-
-func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
-	s.newBBTestTable = []BB2Vec3TestValue{
+func (s *S) TestBBox(c *C) {
+	tests := []BB2Vec3TestValue{
 		BB2Vec3TestValue{
 			Min:      Vec3(0, 0, 0),
 			Max:      Vec3(1, 2, 3),
@@ -61,8 +49,35 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			Expected: BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
 		},
 	}
+	for _, value := range tests {
+		obtained := BBox(value.Min, value.Max)
+		c.Check(obtained, BoundingBoxCheck, value.Expected)
+	}
+}
 
-	s.isValidTestTable = []BBBoolTestValue{
+func (s *S) TestBBoxOrder(c *C) {
+	tests := []BB2Vec3TestValue{
+		BB2Vec3TestValue{
+			Min:      Vec3(0, 0, 0),
+			Max:      Vec3(1, 2, 3),
+			Expected: BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)},
+		},
+		BB2Vec3TestValue{
+			Min:      Vec3(-1, -2.2, 0),
+			Max:      Vec3(2, 3, 3),
+			Expected: BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
+		},
+	}
+	for _, value := range tests {
+		bb := BBox(value.Min, value.Max)
+		obtained := bb.Order()
+		c.Check(bb, BoundingBoxCheck, obtained)
+		c.Check(obtained, BoundingBoxCheck, value.Expected)
+	}
+}
+
+func (s *S) TestBBoxIsValid(c *C) {
+	tests := []BBBoolTestValue{
 		BBBoolTestValue{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			true,
@@ -88,8 +103,14 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			false,
 		},
 	}
+	for _, value := range tests {
+		obtained := value.Value.IsValid()
+		c.Check(obtained, Equals, value.Expected, Commentf("%v.IsValid()==%t epected %t", value.Value, obtained, value.Expected))
+	}
+}
 
-	s.cornersTestTable = []BBVec3ArrayTestValue{
+func (s *S) TestBBoxCorners(c *C) {
+	tests := []BBVec3ArrayTestValue{
 		BBVec3ArrayTestValue{
 			BBox(Vec3(-1, -2, -3), Vec3(1, 2, 3)),
 			[]Vector3{
@@ -104,8 +125,14 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			},
 		},
 	}
+	for _, value := range tests {
+		obtained := value.Value.Corners()
+		c.Check(obtained, DeepEquals, value.Expected)
+	}
+}
 
-	s.dimensionTestTable = []BBVec3TestValue{
+func (s *S) TestBBoxDimension(c *C) {
+	tests := []BBVec3TestValue{
 		BBVec3TestValue{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			Vec3(1, 1, 1),
@@ -123,26 +150,14 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			Vec3(-1, -1, -1),
 		},
 	}
-
-	s.containsTestTable = []BB2BoolTestValue{
-		BB2BoolTestValue{
-			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
-			BBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
-			false,
-		},
-		BB2BoolTestValue{
-			BBox(Vec3(0, 0, 1), Vec3(1, 1, -1)),
-			BBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
-			false,
-		},
-		BB2BoolTestValue{
-			BBox(Vec3(-1, -1, -1), Vec3(1, 1, 1)),
-			BBox(Vec3(0, 0, 0), Vec3(0.5, 0.5, 0)),
-			true,
-		},
+	for _, value := range tests {
+		obtained := value.Value.Dimension()
+		c.Check(obtained, DeepEquals, value.Expected)
 	}
+}
 
-	s.containsVecTestTable = []BBVec3BoolTestValue{
+func (s *S) TestBBoxContainsVec(c *C) {
+	tests := []BBVec3BoolTestValue{
 		BBVec3BoolTestValue{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0.5, 0.5, 0),
@@ -164,8 +179,14 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			true,
 		},
 	}
+	for _, value := range tests {
+		obtained := value.Value.ContainsVec(value.Vec)
+		c.Check(obtained, Equals, value.Expected)
+	}
+}
 
-	s.overlapsTestTable = []BB2BoolTestValue{
+func (s *S) TestBBoxOverlaps(c *C) {
+	tests := []BB2BoolTestValue{
 		BB2BoolTestValue{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			BBox(Vec3(-1, -1, 0), Vec3(0, 0, 0)),
@@ -182,54 +203,7 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 			true,
 		},
 	}
-}
-
-func (s *BoundingBoxTestSuite) TestBBox(c *C) {
-	for _, value := range s.newBBTestTable {
-		obtained := BBox(value.Min, value.Max)
-		c.Check(obtained, BoundingBoxCheck, value.Expected)
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestOrder(c *C) {
-	for _, value := range s.newBBTestTable {
-		bb := BBox(value.Min, value.Max)
-		obtained := bb.Order()
-		c.Check(bb, BoundingBoxCheck, obtained)
-		c.Check(obtained, BoundingBoxCheck, value.Expected)
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestIsValid(c *C) {
-	for _, value := range s.isValidTestTable {
-		obtained := value.Value.IsValid()
-		c.Check(obtained, Equals, value.Expected, Commentf("%v.IsValid()==%t epected %t", value.Value, obtained, value.Expected))
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestCorners(c *C) {
-	for _, value := range s.cornersTestTable {
-		obtained := value.Value.Corners()
-		c.Check(obtained, DeepEquals, value.Expected)
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestDimension(c *C) {
-	for _, value := range s.dimensionTestTable {
-		obtained := value.Value.Dimension()
-		c.Check(obtained, DeepEquals, value.Expected)
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestContainsVec(c *C) {
-	for _, value := range s.containsVecTestTable {
-		obtained := value.Value.ContainsVec(value.Vec)
-		c.Check(obtained, Equals, value.Expected)
-	}
-}
-
-func (s *BoundingBoxTestSuite) TestOverlaps(c *C) {
-	for _, value := range s.overlapsTestTable {
+	for _, value := range tests {
 		obtained := value.Box.Overlaps(value.Bounds)
 		c.Check(obtained, Equals, value.Expected, Commentf("Ovleraps(%v,%v) %t Expected:%t", value.Box, value.Bounds, obtained, value.Expected))
 	}

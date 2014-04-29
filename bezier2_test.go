@@ -9,14 +9,8 @@ type Bezier2Points struct {
 	Expected Path2
 }
 
-type Bezier2TestSuite struct {
-	setTestTable []*Bezier2Points
-}
-
-var _ = Suite(&Bezier2TestSuite{})
-
-func (s *Bezier2TestSuite) SetUpTest(c *C) {
-	s.setTestTable = []*Bezier2Points{
+func (s *S) TestNewBezier2(c *C) {
+	tests := []*Bezier2Points{
 		&Bezier2Points{
 			Expected: NewBezier2(),
 		},
@@ -29,10 +23,7 @@ func (s *Bezier2TestSuite) SetUpTest(c *C) {
 			Expected: NewBezier2(Vec2(0, 0), Vec2(-1, -1), Vec2(2, 3)),
 		},
 	}
-}
-
-func (s *Bezier2TestSuite) TestNew(c *C) {
-	for _, t := range s.setTestTable {
+	for _, t := range tests {
 		obtained := NewBezier2(t.Points...)
 		c.Check(obtained, DeepEquals, t.Expected)
 	}

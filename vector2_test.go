@@ -4,103 +4,97 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-type Vector2TestSuite struct {
-	vec Vector2
+func (s *S) TestVec2(c *C) {
+	vec := Vec2(1.23, -3.21)
+	c.Assert(vec, Equals, Vector2{1.23, -3.21})
 }
 
-var _ = Suite(&Vector2TestSuite{})
-
-func (s *Vector2TestSuite) Vec2(c *C) {
-	s.vec = Vec2(1.23, -3.21)
-	c.Assert(s.vec, Equals, Vector2{1.23, -3.21})
+func (s *S) TestVector2Len(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Len(), Equals, float32(2))
 }
 
-func (s *Vector2TestSuite) Vector2Len(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Len(), Equals, 2)
+func (s *S) TestVector2Len2(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Len2(), Equals, float32(4))
 }
 
-func (s *Vector2TestSuite) Vector2Len2(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Len2(), Equals, 4)
+func (s *S) TestVector2Sub(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Sub(Vec2(-2, -1)), Equals, Vec2(0, 1))
 }
 
-func (s *Vector2TestSuite) Vector2Sub(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Sub(Vec2(-2, -1)), Equals, Vec2(0, 1))
+func (s *S) TestVector2Nor(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Nor(), Equals, Vec2(-1, 0))
 }
 
-func (s *Vector2TestSuite) Vector2Nor(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Nor(), Equals, Vec2(-1, 0))
+func (s *S) TestVector2Add(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Add(Vec2(2, 2)), Equals, Vec2(0, 2))
 }
 
-func (s *Vector2TestSuite) Vector2Add(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Add(Vec2(2, 2)), Equals, Vec2(0, 2))
+func (s *S) TestVector2Dot(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Dot(Vec2(-3, 1)), Equals, float32(6))
 }
 
-func (s *Vector2TestSuite) Vector2Dot(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Dot(Vec2(-3, 1)), Equals, -1.0)
+func (s *S) TestVector2Mul(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Mul(Vec2(-2, 2)), Equals, Vec2(4, 0))
 }
 
-func (s *Vector2TestSuite) Vector2Mul(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Mul(Vec2(-2, 2)), Equals, Vec2(4, 0))
+func (s *S) TestVector2Div(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Div(Vec2(-2, 2)), Equals, Vec2(1, 0))
 }
 
-func (s *Vector2TestSuite) Vector2Div(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Div(Vec2(-2, 2)), Equals, Vec2(1, 0))
+func (s *S) TestVector2Scale(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Scale(2), Equals, Vec2(-4, 0))
 }
 
-func (s *Vector2TestSuite) Vector2Scale(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Scale(2), Equals, Vec2(-4, 0))
+func (s *S) TestVector2Distance(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Distance(Vec2(0, 0)), Equals, float32(2))
 }
 
-func (s *Vector2TestSuite) Vector2Distance(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Distance(Vec2(0, 0)), Equals, 2)
+func (s *S) TestVector2Distance2(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Distance2(Vec2(0, 0)), Equals, float32(4))
 }
 
-func (s *Vector2TestSuite) Vector2Distance2(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Distance2(Vec2(0, 0)), Equals, 4)
-}
-
-func (s *Vector2TestSuite) Vector2Limit(c *C) {
-	s.vec = Vec2(-2, 0)
-	c.Assert(s.vec.Limit(1), Equals, Vec2(-1, 0))
+func (s *S) TestVector2Limit(c *C) {
+	vec := Vec2(-2, 0)
+	c.Assert(vec.Limit(1), Equals, Vec2(-1, 0))
 }
 
 // TODO MulMatrix
 
-func (s *Vector2TestSuite) Vector2Cross(c *C) {
-	s.vec = Vec2(5, 1)
-	c.Assert(s.vec.Cross(Vec2(-1, 0)), Equals, 1.0)
+func (s *S) TestVector2Cross(c *C) {
+	vec := Vec2(5, 1)
+	c.Assert(vec.Cross(Vec2(-1, 0)), Equals, float32(1.0))
 }
 
-func (s *Vector2TestSuite) Vector2Angle(c *C) {
-	s.vec = Vec2(1, 1)
-	c.Assert(s.vec.Angle(), Equals, 45.0)
+func (s *S) TestVector2Angle(c *C) {
+	vec := Vec2(1, 1)
+	c.Assert(vec.Angle(), Equals, float32(45.0))
 }
 
-func (s *Vector2TestSuite) Vector2Rotate(c *C) {
+func (s *S) TestVector2Rotate(c *C) {
 	var angle float32 = 45
 	var x float32 = 5
 	var y float32 = -2
 	xResult := Cos(angle*DegreeToRadians)*x - Sin(angle*DegreeToRadians)*y
 	yResult := Sin(angle*DegreeToRadians)*x + Cos(angle*DegreeToRadians)*y
-	s.vec = Vec2(x, y)
+	vec := Vec2(x, y)
 
-	vec := s.vec.Rotate(angle)
+	vec = vec.Rotate(angle)
 	c.Assert(vec.X, Equals, xResult)
 	c.Assert(vec.Y, Equals, yResult)
 }
 
-func (s *Vector2TestSuite) Vector2Lerp(c *C) {
+func (s *S) TestVector2Lerp(c *C) {
 	var alpha float32 = 0.5
 	v1 := Vec2(1, 1)
 	v2 := Vec2(-2, 0)
@@ -113,19 +107,19 @@ func (s *Vector2TestSuite) Vector2Lerp(c *C) {
 	c.Assert(v3.Y, Equals, yResult)
 }
 
-func (s *Vector2TestSuite) Vector2Faceforward(c *C) {
+func (s *S) TestVector2Faceforward(c *C) {
 	v := Vec2(1.0, -2.0)
 	n := Vec2(0.0, 0.0)
 	i := Vec2(2.2, 0.3)
 
 	expected := Vec2(-1.0, 2.0)
 	result := v.Faceforward(i, n)
-	c.Check(result, EqualsFloat32, expected)
+	c.Check(result, Equals, expected)
 }
 
 // ### Benchmarks ###
 
-func (s *Vector2TestSuite) BenchmarkVector2Add(c *C) {
+func (s *S) TestBenchmarkVector2Add(c *C) {
 	vec1 := Vec2(0, 0)
 	vec2 := Vec2(1, 1)
 	c.ResetTimer()
@@ -149,7 +143,7 @@ func (vec Vector2NoPointer) Add(vec2 Vector2NoPointer) Vector2NoPointer {
 	return vec
 }
 
-func (s *Vector2TestSuite) BenchmarkVector2NoPointerAdd(c *C) {
+func (s *S) TestBenchmarkVector2NoPointerAdd(c *C) {
 	vec1 := Vector2NoPointer{0, 0}
 	vec2 := Vector2NoPointer{1, 1}
 	c.ResetTimer()
@@ -168,7 +162,7 @@ func (vec *Vector2Pointer) Add(vec2 *Vector2Pointer) *Vector2Pointer {
 	return vec
 }
 
-func (s *Vector2TestSuite) BenchmarkVector2PointerAdd(c *C) {
+func (s *S) TestBenchmarkVector2PointerAdd(c *C) {
 	vec1 := &Vector2Pointer{0, 0}
 	vec2 := &Vector2Pointer{1, 1}
 	c.ResetTimer()

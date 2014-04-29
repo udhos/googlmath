@@ -9,22 +9,12 @@ type SphereOverlapsTestValue struct {
 	Expected        bool
 }
 
-type SphereTestSuite struct {
-	containTestTable []SphereOverlapsTestValue
-}
-
-var _ = Suite(&SphereTestSuite{})
-
-func (s *SphereTestSuite) SetUpTest(c *C) {
-	s.containTestTable = []SphereOverlapsTestValue{
+func (s *S) TestSphereOverlaps(c *C) {
+	containTestTable := []SphereOverlapsTestValue{
 		SphereOverlapsTestValue{Spe(Vec3(1, -2, 0), 12.0), Spe(Vec3(0, 2, 0), 30.0), true},
 	}
-}
-
-func (s *SphereTestSuite) Overlaps(c *C) {
-
-	for i := range s.containTestTable {
-		value := s.containTestTable[i]
+	for i := range containTestTable {
+		value := containTestTable[i]
 		c.Assert(value.Sphere.Overlaps(value.Sphere2), Equals, value.Expected)
 	}
 }

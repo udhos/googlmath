@@ -4,11 +4,7 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-type PolygonTestSuite struct{}
-
-var _ = Suite(&PolygonTestSuite{})
-
-func (s *PolygonTestSuite) TestPolygonTransformedVertices(c *C) {
+func (s *S) TestPolygonTransformedVertices(c *C) {
 	poly, _ := NewPolygon([]float32{
 		-1.0, 0.0,
 		0.0, 1.0,
