@@ -1,38 +1,31 @@
 package math
 
 // Implementation of the Bezier curve in three dimensions.
-type Bezier3 struct {
-	Points []Vector3
-}
+type Bezier3 []Vector3
 
 func NewBezier3(points ...Vector3) Path3 {
-	return &Bezier3{points}
-}
-
-func (b *Bezier3) Set(points ...Vector3) Path3 {
-	b.Points = points
-	return b
+	return Bezier3(points)
 }
 
 // The value of the path at t where 0<=t<=1
-func (b *Bezier3) ValueAt(t float32) Vector3 {
+func (b Bezier3) ValueAt(t float32) Vector3 {
 	out := Vec3(0, 0, 0)
-	n := len(b.Points)
+	n := len(b)
 
 	if n == 2 {
-		out = Linear3(t, b.Points[0], b.Points[1])
+		out = Linear3(t, b[0], b[1])
 	} else if n == 3 {
-		out = Quadratic3(t, b.Points[0], b.Points[1], b.Points[2])
+		out = Quadratic3(t, b[0], b[1], b[2])
 	} else if n == 4 {
-		out = Cubic3(t, b.Points[0], b.Points[1], b.Points[2], b.Points[3])
+		out = Cubic3(t, b[0], b[1], b[2], b[3])
 	}
 	return out
 }
 
 // The approximated value (between 0 and 1) on the path which is closest to the specified value.
-func (b *Bezier3) Approximate(p3 Vector3) float32 {
-	p1 := b.Points[0]
-	p2 := b.Points[len(b.Points)-1]
+func (b Bezier3) Approximate(p3 Vector3) float32 {
+	p1 := b[0]
+	p2 := b[len(b)-1]
 
 	l1 := p1.Distance(p2)
 	l2 := p3.Distance(p2)

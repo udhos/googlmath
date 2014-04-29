@@ -16,14 +16,14 @@ func (checker *BoundingBoxChecker) Check(params []interface{}, names []string) (
 	if len(params) != 2 {
 		return false, "Param length not 2"
 	}
-	var v1, v2 *BoundingBox
+	var v1, v2 BoundingBox
 	var ok bool
 
-	v1, ok = (params[0]).(*BoundingBox)
+	v1, ok = (params[0]).(BoundingBox)
 	if ok == false {
 		return false, "Param[0] not a *BoundingBoxtype"
 	}
-	v2, ok = (params[1]).(*BoundingBox)
+	v2, ok = (params[1]).(BoundingBox)
 	if ok == false {
 		return false, "Param[1] not a *BoundingBox type"
 	}

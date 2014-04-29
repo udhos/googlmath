@@ -12,7 +12,7 @@ type Polygon struct {
 	position      Vector2
 	rotation      float32
 	scalar        Vector2
-	bounds        *Rectangle
+	bounds        Rectangle
 }
 
 func NewPolygon(vertices []float32) (*Polygon, error) {
@@ -119,7 +119,7 @@ func (p *Polygon) Area() float32 {
 }
 
 // Returns an axis-aligned bounding box of this polygon.
-func (p *Polygon) BoundingRectangle() *Rectangle {
+func (p *Polygon) BoundingRectangle() Rectangle {
 	vertices := p.TransformedVertices()
 	minX := vertices[0]
 	minY := vertices[1]
@@ -140,15 +140,10 @@ func (p *Polygon) BoundingRectangle() *Rectangle {
 			maxY = vertices[i+1]
 		}
 	}
-
-	if p.bounds == nil {
-		p.bounds = Rect(minX, minY, maxX, maxY)
-	} else {
-		p.bounds.X = minX
-		p.bounds.Y = minY
-		p.bounds.Width = maxX
-		p.bounds.Height = maxY
-	}
+	p.bounds.Min.X = minX
+	p.bounds.Min.Y = minY
+	p.bounds.Max.X = maxX
+	p.bounds.Max.X = maxY
 	return p.bounds
 }
 

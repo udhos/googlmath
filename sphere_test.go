@@ -5,7 +5,7 @@ import (
 )
 
 type SphereOverlapsTestValue struct {
-	Sphere, Sphere2 *Sphere
+	Sphere, Sphere2 Sphere
 	Expected        bool
 }
 
@@ -17,7 +17,7 @@ var _ = Suite(&SphereTestSuite{})
 
 func (s *SphereTestSuite) SetUpTest(c *C) {
 	s.containTestTable = []SphereOverlapsTestValue{
-		SphereOverlapsTestValue{NewSphere(Vec3(1, -2, 0), 12.0), NewSphere(Vec3(0, 2, 0), 30.0), true},
+		SphereOverlapsTestValue{Spe(Vec3(1, -2, 0), 12.0), Spe(Vec3(0, 2, 0), 30.0), true},
 	}
 }
 

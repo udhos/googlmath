@@ -16,10 +16,3 @@ func (c Circle) Contains(x, y float32) bool {
 	y = c.Y - y
 	return x*x+y*y <= c.Radius*c.Radius
 }
-
-func (c *Circle) Set(x, y, radius float32) Circle {
-	c.X = x
-	c.Y = y
-	c.Radius = radius
-	return *c
-}

@@ -8,11 +8,11 @@ type Ellipse struct {
 	Height float32
 }
 
-func NewEllipse(x, y, width, height float32) *Ellipse {
-	return &Ellipse{x, y, width, height}
+func Ell(x, y, width, height float32) Ellipse {
+	return Ellipse{x, y, width, height}
 }
 
-func (e *Ellipse) Contains(x, y float32) bool {
+func (e Ellipse) Contains(x, y float32) bool {
 	if e.Width <= 0.0 {
 		return false
 	}
@@ -26,12 +26,4 @@ func (e *Ellipse) Contains(x, y float32) bool {
 	yr := (e.Height / 2)
 
 	return x*x/xr*xr+y*y/yr*yr <= 1
-}
-
-func (e *Ellipse) Set(x, y, width, height float32) *Ellipse {
-	e.X = x
-	e.Y = y
-	e.Width = width
-	e.Height = height
-	return e
 }

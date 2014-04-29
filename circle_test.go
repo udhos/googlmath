@@ -30,7 +30,4 @@ func (s *CircleTestSuite) TestCircle(c *C) {
 	for i := range s.containTestTable {
 		c.Assert(s.circle.Contains(s.containTestTable[i].X, s.containTestTable[i].Y), Equals, s.containTestTable[i].Expected)
 	}
-
-	// Set
-	c.Assert(s.circle.Set(1, 1.1, 0.0), Equals, Circ(1, 1.1, 0.0))
 }

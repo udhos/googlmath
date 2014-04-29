@@ -1,5 +1,7 @@
 package math
 
+import "strconv"
+
 type Point struct {
 	X, Y int
 }
@@ -8,34 +10,26 @@ func Pt(x, y int) Point {
 	return Point{X: x, Y: y}
 }
 
-func (p Point) Cpy() Point {
-	return Point{X: p.X, Y: p.Y}
-}
-
 func (p Point) Add(q Point) Point {
-	p.X += q.X
-	p.Y += q.Y
-	return p
+	return Point{p.X + q.X, p.Y + q.Y}
 }
 
 func (p Point) Sub(q Point) Point {
-	p.X -= q.X
-	p.Y -= q.Y
-	return p
+	return Point{p.X - q.X, p.Y - q.Y}
 }
 
 func (p Point) Mul(q Point) Point {
-	p.X *= q.X
-	p.Y *= q.Y
-	return p
+	return Point{p.X * q.X, p.Y * q.Y}
 }
 
 func (p Point) Div(q Point) Point {
-	p.X /= q.X
-	p.Y /= q.Y
-	return p
+	return Point{p.X / q.X, p.Y / q.Y}
 }
 
-func (p Point) Equals(q Point) bool {
+func (p Point) Eq(q Point) bool {
 	return p.X == q.X && p.Y == q.Y
+}
+
+func (p Point) String() string {
+	return "(" + strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y) + ")"
 }

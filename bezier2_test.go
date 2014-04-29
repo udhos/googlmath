@@ -37,11 +37,3 @@ func (s *Bezier2TestSuite) TestNew(c *C) {
 		c.Check(obtained, DeepEquals, t.Expected)
 	}
 }
-
-func (s *Bezier2TestSuite) TestSetPoints(c *C) {
-	for _, t := range s.setTestTable {
-		bezier := &Bezier2{}
-		obtained := bezier.Set(t.Points...)
-		c.Check(obtained, DeepEquals, t.Expected)
-	}
-}

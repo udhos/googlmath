@@ -16,19 +16,15 @@ var (
 // Used to define the viewable region and it's projection onto the screen.
 type Frustum struct {
 	// The six clipping planes, near, far, left, right, top, bottom
-	Left, Right *Plane
-	Top, Bottom *Plane
-	Near, Far   *Plane
+	Left, Right Plane
+	Top, Bottom Plane
+	Near, Far   Plane
 
 	planePoints []Vector3
 }
 
 func NewFrustum() *Frustum {
-	zeroPlane := NewPlane(Vec3(0, 0, 0), 0)
-	return &Frustum{Left: zeroPlane, Right: zeroPlane.Cpy(),
-		Top: zeroPlane.Cpy(), Bottom: zeroPlane.Cpy(),
-		Near: zeroPlane.Cpy(), Far: zeroPlane.Cpy(),
-		planePoints: make([]Vector3, len(clipSpacePlanePoints))}
+	return &Frustum{planePoints: make([]Vector3, len(clipSpacePlanePoints))}
 }
 
 func (f *Frustum) Update(invProjectionView *Matrix4) {

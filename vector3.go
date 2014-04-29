@@ -1,5 +1,9 @@
 package math
 
+import "fmt"
+
+var ZV3 Vector3
+
 type Vector3 struct {
 	X float32
 	Y float32
@@ -10,68 +14,20 @@ func Vec3(x, y, z float32) Vector3 {
 	return Vector3{x, y, z}
 }
 
-func (vec *Vector3) Set(x, y, z float32) Vector3 {
-	vec.X = x
-	vec.Y = y
-	vec.Z = z
-	return *vec
-}
-
-func (vec *Vector3) SetVec2(v Vector2) Vector3 {
-	vec.X = v.X
-	vec.Y = v.Y
-	return *vec
-}
-
-func (vec *Vector3) SetVec3(v Vector3) Vector3 {
-	vec.X = v.X
-	vec.Y = v.Y
-	vec.Z = v.Z
-	return *vec
-}
-
-func (vec Vector3) Vec2() Vector2 {
-	return Vec2(vec.X, vec.Y)
-}
-
-func (vec Vector3) Cpy() Vector3 {
-	return Vector3{vec.X, vec.Y, vec.Z}
-}
-
-// Clr sets the vector to a zero vector and returns itself
-func (vec Vector3) Clr() Vector3 {
-	vec.X = 0
-	vec.Y = 0
-	vec.Z = 0
-	return vec
-}
-
 func (vec Vector3) Add(vec2 Vector3) Vector3 {
-	vec.X += vec2.X
-	vec.Y += vec2.Y
-	vec.Z += vec2.Z
-	return vec
+	return Vec3(vec.X+vec2.X, vec.Y+vec2.Y, vec.Z+vec2.Z)
 }
 
 func (vec Vector3) Sub(vec2 Vector3) Vector3 {
-	vec.X -= vec2.X
-	vec.Y -= vec2.Y
-	vec.Z -= vec2.Z
-	return vec
+	return Vec3(vec.X-vec2.X, vec.Y-vec2.Y, vec.Z-vec2.Z)
 }
 
 func (vec Vector3) Mul(vec2 Vector3) Vector3 {
-	vec.X *= vec2.X
-	vec.Y *= vec2.Y
-	vec.Z *= vec2.Z
-	return vec
+	return Vec3(vec.X*vec2.X, vec.Y*vec2.Y, vec.Z*vec2.Z)
 }
 
 func (vec Vector3) Div(vec2 Vector3) Vector3 {
-	vec.X /= vec2.X
-	vec.Y /= vec2.Y
-	vec.Z /= vec2.Z
-	return vec
+	return Vec3(vec.X/vec2.X, vec.Y/vec2.Y, vec.Z/vec2.Z)
 }
 
 // The euclidian length
@@ -116,10 +72,7 @@ func (vec Vector3) Cross(vec2 Vector3) Vector3 {
 	x := vec.Y*vec2.Z - vec.Z*vec2.Y
 	y := vec.Z*vec2.X - vec.X*vec2.Z
 	z := vec.X*vec2.Y - vec.Y*vec2.X
-	vec.X = x
-	vec.Y = y
-	vec.Z = z
-	return vec
+	return Vec3(x, y, z)
 }
 
 // Whether this vector is a unit length vector
@@ -133,9 +86,9 @@ func (vec Vector3) IsZero() bool {
 
 // Linearly interpolates between this vector and the target vector by alpha which is in the range [0,1].
 func (vec Vector3) Lerp(target Vector3, alpha float32) Vector3 {
-	vec.Scale(1.0 - alpha)
-	vec.Add(target.Cpy().Scale(alpha))
-	return vec
+	v := vec.Scale(1.0 - alpha)
+	v = v.Add(target.Scale(alpha))
+	return v
 }
 
 // Spherically interpolates between this vector and the target vector by alpha which is in the range [0,1].
@@ -171,15 +124,17 @@ func (vec Vector3) Limit(limit float32) Vector3 {
 }
 
 func (vec Vector3) Scale(scalar float32) Vector3 {
-	vec.X *= scalar
-	vec.Y *= scalar
-	vec.Z *= scalar
-	return vec
+	return Vec3(vec.X*scalar, vec.Y*scalar, vec.Z*scalar)
 }
 
 func (vec Vector3) Invert() Vector3 {
-	vec.X = -vec.X
-	vec.Y = -vec.Y
-	vec.Z = -vec.Z
-	return vec
+	return Vec3(-vec.X, -vec.Y, -vec.Z)
+}
+
+func (vec Vector3) Eq(v2 Vector3) bool {
+	return vec.X == v2.X && vec.Y == v2.Y && vec.Z == v2.Z
+}
+
+func (vec Vector3) String() string {
+	return fmt.Sprintf("(%g,%g,%g)", vec.X, vec.Y, vec.Z)
 }

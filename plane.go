@@ -8,17 +8,15 @@ const (
 	PlaneSide_Front
 )
 
+var ZPL Plane
+
 type Plane struct {
 	Normal Vector3
 	D      float32
 }
 
-func NewPlane(normal Vector3, d float32) *Plane {
-	return &Plane{normal.Nor(), d}
-}
-
-func (p *Plane) Cpy() *Plane {
-	return &Plane{p.Normal, p.D}
+func Ple(normal Vector3, d float32) Plane {
+	return Plane{normal.Nor(), d}
 }
 
 // Sets the plane normal and distance to the origin based on the three given points which are considered to be on the plane.
@@ -31,13 +29,13 @@ func (p *Plane) Set(p1, p2, p3 Vector3) {
 }
 
 // Calculates the shortest signed distance between the plane and the given point.
-func (p *Plane) Distance(vec Vector3) float32 {
+func (p Plane) Distance(vec Vector3) float32 {
 	return p.Normal.Dot(vec) + p.D
 }
 
 // Returns on which side the given point lies relative to the plane and its normal.
 // PlaneSide.Front refers to the side the plane normal points to.
-func (p *Plane) PlaneSide(vec Vector3) PlaneSide {
+func (p Plane) PlaneSide(vec Vector3) PlaneSide {
 	dist := p.Normal.Dot(vec) + p.D
 	if dist == 0 {
 		return PlaneSide_OnPlane
@@ -50,7 +48,7 @@ func (p *Plane) PlaneSide(vec Vector3) PlaneSide {
 
 // Returns whether the plane is facing the direction vector. Think of the direction vector as the direction a camera looks in.
 // This method will return true if the front side of the plane determined by its normal faces the camera.
-func (p *Plane) IsFrontFacing(direction Vector3) bool {
+func (p Plane) IsFrontFacing(direction Vector3) bool {
 	dot := p.Normal.Dot(direction)
 	return dot <= 0
 }

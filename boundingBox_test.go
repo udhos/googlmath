@@ -6,32 +6,32 @@ import (
 
 type BB2Vec3TestValue struct {
 	Min, Max Vector3
-	Expected *BoundingBox
+	Expected BoundingBox
 }
 
 type BBBoolTestValue struct {
-	Value    *BoundingBox
+	Value    BoundingBox
 	Expected bool
 }
 
 type BB2BoolTestValue struct {
-	Box      *BoundingBox
-	Bounds   *BoundingBox
+	Box      BoundingBox
+	Bounds   BoundingBox
 	Expected bool
 }
 
 type BBVec3ArrayTestValue struct {
-	Value    *BoundingBox
+	Value    BoundingBox
 	Expected []Vector3
 }
 
 type BBVec3TestValue struct {
-	Value    *BoundingBox
+	Value    BoundingBox
 	Expected Vector3
 }
 
 type BBVec3BoolTestValue struct {
-	Value    *BoundingBox
+	Value    BoundingBox
 	Vec      Vector3
 	Expected bool
 }
@@ -53,45 +53,45 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 		BB2Vec3TestValue{
 			Min:      Vec3(0, 0, 0),
 			Max:      Vec3(1, 2, 3),
-			Expected: &BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)},
+			Expected: BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)},
 		},
 		BB2Vec3TestValue{
 			Min:      Vec3(-1, -2.2, 0),
 			Max:      Vec3(2, 3, 3),
-			Expected: &BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
+			Expected: BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
 		},
 	}
 
 	s.isValidTestTable = []BBBoolTestValue{
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			true,
 		},
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1.2, 2.3, 4.3)),
+			BBox(Vec3(0, 0, 0), Vec3(1.2, 2.3, 4.3)),
 			true,
 		},
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(-2, -1, 1), Vec3(1, 0, 3)),
+			BBox(Vec3(-2, -1, 1), Vec3(1, 0, 3)),
 			true,
 		},
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
 			false,
 		},
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(2, 2, 2), Vec3(1, 1, 1)), // It is true, because Set swaps min<->max
-			true,
+			BBox(Vec3(2, 2, 2), Vec3(1, 1, 1)),
+			false,
 		},
 		BBBoolTestValue{
-			NewBoundingBox(Vec3(0, 2, 1), Vec3(0, 2, 1)),
+			BBox(Vec3(0, 2, 1), Vec3(0, 2, 1)),
 			false,
 		},
 	}
 
 	s.cornersTestTable = []BBVec3ArrayTestValue{
 		BBVec3ArrayTestValue{
-			NewBoundingBox(Vec3(1, 2, 3), Vec3(-1, -2, -3)),
+			BBox(Vec3(-1, -2, -3), Vec3(1, 2, 3)),
 			[]Vector3{
 				Vec3(-1, -2, -3),
 				Vec3(1, -2, -3),
@@ -107,59 +107,59 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 
 	s.dimensionTestTable = []BBVec3TestValue{
 		BBVec3TestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			Vec3(1, 1, 1),
 		},
 		BBVec3TestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
 			Vec3(0, 0, 0),
 		},
 		BBVec3TestValue{
-			NewBoundingBox(Vec3(-1, -1, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(-1, -1, 0), Vec3(1, 1, 1)),
 			Vec3(2, 2, 1),
 		},
 		BBVec3TestValue{
-			NewBoundingBox(Vec3(-1, -1, -1), Vec3(-2, -2, -2)),
-			Vec3(1, 1, 1),
+			BBox(Vec3(-1, -1, -1), Vec3(-2, -2, -2)),
+			Vec3(-1, -1, -1),
 		},
 	}
 
 	s.containsTestTable = []BB2BoolTestValue{
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
-			NewBoundingBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
 			false,
 		},
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 1), Vec3(1, 1, -1)),
-			NewBoundingBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
+			BBox(Vec3(0, 0, 1), Vec3(1, 1, -1)),
+			BBox(Vec3(-1, -1, -1), Vec3(0, 2, 0)),
 			false,
 		},
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(-1, -1, -1), Vec3(1, 1, 1)),
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(0.5, 0.5, 0)),
+			BBox(Vec3(-1, -1, -1), Vec3(1, 1, 1)),
+			BBox(Vec3(0, 0, 0), Vec3(0.5, 0.5, 0)),
 			true,
 		},
 	}
 
 	s.containsVecTestTable = []BBVec3BoolTestValue{
 		BBVec3BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0.5, 0.5, 0),
 			true,
 		},
 		BBVec3BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			Vec3(0.5, 0.5, 0),
 			true,
 		},
 		BBVec3BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0.5, 0.5, -1),
 			false,
 		},
 		BBVec3BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0, 0, 0),
 			true,
 		},
@@ -167,43 +167,37 @@ func (s *BoundingBoxTestSuite) SetUpTest(c *C) {
 
 	s.overlapsTestTable = []BB2BoolTestValue{
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
-			NewBoundingBox(Vec3(-1, -1, 0), Vec3(0, 0, 0)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
+			BBox(Vec3(-1, -1, 0), Vec3(0, 0, 0)),
 			true,
 		},
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
-			NewBoundingBox(Vec3(-1, -1, -1), Vec3(-0.1, -0.1, -0.1)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(-1, -1, -1), Vec3(-0.1, -0.1, -0.1)),
 			false,
 		},
 		BB2BoolTestValue{
-			NewBoundingBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
-			NewBoundingBox(Vec3(-1, 0, 0), Vec3(0, 0, 0.5)),
+			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
+			BBox(Vec3(-1, 0, 0), Vec3(0, 0, 0.5)),
 			true,
 		},
 	}
 }
 
-func (s *BoundingBoxTestSuite) TestNewBoundingBox(c *C) {
+func (s *BoundingBoxTestSuite) TestBBox(c *C) {
 	for _, value := range s.newBBTestTable {
-		obtained := NewBoundingBox(value.Min, value.Max)
+		obtained := BBox(value.Min, value.Max)
 		c.Check(obtained, BoundingBoxCheck, value.Expected)
 	}
 }
 
-func (s *BoundingBoxTestSuite) TestSet(c *C) {
+func (s *BoundingBoxTestSuite) TestOrder(c *C) {
 	for _, value := range s.newBBTestTable {
-		bb := NewBoundingBox(Vec3(0, 0, 0), Vec3(0, 0, 0))
-		obtained := bb.Set(value.Min, value.Max)
+		bb := BBox(value.Min, value.Max)
+		obtained := bb.Order()
 		c.Check(bb, BoundingBoxCheck, obtained)
 		c.Check(obtained, BoundingBoxCheck, value.Expected)
 	}
-}
-
-func (s *BoundingBoxTestSuite) TestCpy(c *C) {
-	bb := NewBoundingBox(Vec3(-1, 2, -3), Vec3(1, 0.2, 3.3))
-	obtained := bb.Cpy()
-	c.Check(obtained, BoundingBoxCheck, bb)
 }
 
 func (s *BoundingBoxTestSuite) TestIsValid(c *C) {

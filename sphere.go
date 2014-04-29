@@ -6,10 +6,10 @@ type Sphere struct {
 	Center Vector3
 }
 
-func NewSphere(center Vector3, radius float32) *Sphere {
-	return &Sphere{radius, center}
+func Spe(center Vector3, radius float32) Sphere {
+	return Sphere{radius, center}
 }
 
-func (s *Sphere) Overlaps(sphere *Sphere) bool {
+func (s Sphere) Overlaps(sphere Sphere) bool {
 	return s.Center.Distance2(sphere.Center) < (s.Radius+sphere.Radius)*(s.Radius+sphere.Radius)
 }

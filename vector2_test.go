@@ -15,104 +15,76 @@ func (s *Vector2TestSuite) Vec2(c *C) {
 	c.Assert(s.vec, Equals, Vector2{1.23, -3.21})
 }
 
-func (s *Vector2TestSuite) Vector2Set(c *C) {
-	s.vec.Set(-2, 0)
-	c.Assert(s.vec, Equals, Vec2(-2, 0))
-}
-
-func (s *Vector2TestSuite) Vector2SetVec(c *C) {
-	s.vec.SetVec2(Vec2(-2, 0))
-	c.Assert(s.vec, Equals, Vec2(-2, 0))
-}
-
-func (s *Vector2TestSuite) Vector2Cpy(c *C) {
-	vec2 := s.vec.Cpy()
-	c.Assert(s.vec, Equals, vec2)
-}
-
 func (s *Vector2TestSuite) Vector2Len(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Len(), Equals, 2)
 }
 
 func (s *Vector2TestSuite) Vector2Len2(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Len2(), Equals, 4)
 }
 
 func (s *Vector2TestSuite) Vector2Sub(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Sub(Vec2(-2, -1)), Equals, Vec2(0, 1))
 }
 
-func (s *Vector2TestSuite) Vector2Clr(c *C) {
-	s.vec.Set(-2, 0)
-	c.Assert(s.vec.Clr(), Equals, Vec2(0, 0))
-	c.Assert(s.vec, Equals, Vec2(-2, 0))
-}
-
 func (s *Vector2TestSuite) Vector2Nor(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Nor(), Equals, Vec2(-1, 0))
 }
 
 func (s *Vector2TestSuite) Vector2Add(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Add(Vec2(2, 2)), Equals, Vec2(0, 2))
 }
 
 func (s *Vector2TestSuite) Vector2Dot(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Dot(Vec2(-3, 1)), Equals, -1.0)
 }
 
 func (s *Vector2TestSuite) Vector2Mul(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Mul(Vec2(-2, 2)), Equals, Vec2(4, 0))
 }
 
 func (s *Vector2TestSuite) Vector2Div(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Div(Vec2(-2, 2)), Equals, Vec2(1, 0))
 }
 
 func (s *Vector2TestSuite) Vector2Scale(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Scale(2), Equals, Vec2(-4, 0))
 }
 
 func (s *Vector2TestSuite) Vector2Distance(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Distance(Vec2(0, 0)), Equals, 2)
 }
 
 func (s *Vector2TestSuite) Vector2Distance2(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Distance2(Vec2(0, 0)), Equals, 4)
 }
 
 func (s *Vector2TestSuite) Vector2Limit(c *C) {
-	s.vec.Set(-2, 0)
+	s.vec = Vec2(-2, 0)
 	c.Assert(s.vec.Limit(1), Equals, Vec2(-1, 0))
 }
 
 // TODO MulMatrix
 
 func (s *Vector2TestSuite) Vector2Cross(c *C) {
-	s.vec.Set(5, 1)
+	s.vec = Vec2(5, 1)
 	c.Assert(s.vec.Cross(Vec2(-1, 0)), Equals, 1.0)
 }
 
 func (s *Vector2TestSuite) Vector2Angle(c *C) {
-	s.vec.Set(1, 1)
+	s.vec = Vec2(1, 1)
 	c.Assert(s.vec.Angle(), Equals, 45.0)
-}
-
-func (s *Vector2TestSuite) Vector2SetAngle(c *C) {
-	s.vec.Set(2, 0)
-	s.vec.SetAngle(90)
-	c.Assert(int(s.vec.X*1000)/1000, Equals, 0)
-	c.Assert(s.vec.Y, Equals, 2)
 }
 
 func (s *Vector2TestSuite) Vector2Rotate(c *C) {
@@ -121,7 +93,7 @@ func (s *Vector2TestSuite) Vector2Rotate(c *C) {
 	var y float32 = -2
 	xResult := Cos(angle*DegreeToRadians)*x - Sin(angle*DegreeToRadians)*y
 	yResult := Sin(angle*DegreeToRadians)*x + Cos(angle*DegreeToRadians)*y
-	s.vec.Set(x, y)
+	s.vec = Vec2(x, y)
 
 	vec := s.vec.Rotate(angle)
 	c.Assert(vec.X, Equals, xResult)

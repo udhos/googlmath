@@ -4,71 +4,48 @@ import (
 	"math"
 )
 
+var ZBB BoundingBox
+
 type BoundingBox struct {
 	Min Vector3
 	Max Vector3
 }
 
-func NewBoundingBox(Minimum, Maximum Vector3) *BoundingBox {
-	box := &BoundingBox{}
-	box.Set(Minimum, Maximum)
-	return box
+func BBox(Minimum, Maximum Vector3) BoundingBox {
+	return BoundingBox{Minimum, Maximum} // TODO Should this perform Minimum<->Maximum correction? See func Set
 }
 
-func (box *BoundingBox) Dx() float32 {
+func (box BoundingBox) Dx() float32 {
 	return box.Max.X - box.Min.X
 }
 
-func (box *BoundingBox) Dy() float32 {
+func (box BoundingBox) Dy() float32 {
 	return box.Max.Y - box.Min.Y
 }
 
-func (box *BoundingBox) Dz() float32 {
+func (box BoundingBox) Dz() float32 {
 	return box.Max.Z - box.Min.Z
 }
 
-func (box *BoundingBox) Center() Vector3 {
+func (box BoundingBox) Center() Vector3 {
 	dimension := box.Max.Sub(box.Min)
 	dimension = dimension.Scale(0.5)
 	return box.Min.Add(dimension)
 }
 
-func (box *BoundingBox) Set(Minimum, Maximum Vector3) *BoundingBox {
-	if Minimum.X < Maximum.X {
-		box.Min.X = Minimum.X
-		box.Max.X = Maximum.X
-	} else {
-		box.Min.X = Maximum.X
-		box.Max.X = Minimum.X
-	}
-
-	if Minimum.Y < Maximum.Y {
-		box.Min.Y = Minimum.Y
-		box.Max.Y = Maximum.Y
-	} else {
-		box.Min.Y = Maximum.Y
-		box.Max.Y = Minimum.Y
-	}
-
-	if Minimum.Z < Maximum.Z {
-		box.Min.Z = Minimum.Z
-		box.Max.Z = Maximum.Z
-	} else {
-		box.Min.Z = Maximum.Z
-		box.Max.Z = Minimum.Z
-	}
-	return box
+// Order returns a new BoundingBox with ordered values.
+// Min has the lower values and Maximum the higher values.
+func (box BoundingBox) Order() BoundingBox {
+	min := Vec3(Min(box.Min.X, box.Max.X), Min(box.Min.Y, box.Max.Y), Min(box.Min.Z, box.Max.Z))
+	max := Vec3(Max(box.Min.X, box.Max.X), Max(box.Min.Y, box.Max.Y), Max(box.Min.Z, box.Max.Z))
+	return BoundingBox{min, max}
 }
 
-func (box *BoundingBox) Cpy() *BoundingBox {
-	return NewBoundingBox(box.Min, box.Max)
-}
-
-func (box *BoundingBox) IsValid() bool {
+func (box BoundingBox) IsValid() bool {
 	return box.Min.X < box.Max.X && box.Min.Y < box.Max.Y && box.Min.Z < box.Max.Z
 }
 
-func (box *BoundingBox) Corners() []Vector3 {
+func (box BoundingBox) Corners() []Vector3 {
 	corners := make([]Vector3, 8)
 	corners[0] = Vec3(box.Min.X, box.Min.Y, box.Min.Z)
 	corners[1] = Vec3(box.Max.X, box.Min.Y, box.Min.Z)
@@ -81,24 +58,35 @@ func (box *BoundingBox) Corners() []Vector3 {
 	return corners
 }
 
-func (box *BoundingBox) Dimension() Vector3 {
-	return box.Max.Sub(box.Min)
+func (box BoundingBox) Dimension() Vector3 {
+	return box.Max.Sub(box.Min) // TODO Should this always return positive dimension values?
 }
 
-func (box *BoundingBox) Extend(bounds *BoundingBox) *BoundingBox {
-	return box.Set(box.Min.Set(Min(box.Min.X, bounds.Min.X), Min(box.Min.Y, bounds.Min.Y), Min(box.Min.Z, bounds.Min.Z)),
-		box.Max.Set(Max(box.Max.X, bounds.Max.X), Max(box.Max.Y, bounds.Max.Y), Max(box.Max.Z, bounds.Max.Z)))
+func (box BoundingBox) Extend(bounds BoundingBox) BoundingBox {
+	box.Min.X = Min(box.Min.X, bounds.Min.X)
+	box.Min.Y = Min(box.Min.Y, bounds.Min.Y)
+	box.Min.Z = Min(box.Min.Z, bounds.Min.Z)
+	box.Max.X = Max(box.Max.X, bounds.Max.X)
+	box.Max.Y = Max(box.Max.Y, bounds.Max.Y)
+	box.Max.Z = Max(box.Max.Z, bounds.Max.Z)
+	return box
 }
 
-func (box *BoundingBox) ExtendByVec(v Vector3) *BoundingBox {
-	return box.Set(box.Min.Set(Min(box.Min.X, v.X), Min(box.Min.Y, v.Y), Min(box.Min.Z, v.Z)), box.Max.Set(Max(box.Max.X, v.X), Max(box.Max.Y, v.Y), Max(box.Max.Z, v.Z)))
+func (box BoundingBox) ExtendByVec(v Vector3) BoundingBox {
+	box.Min.X = Min(box.Min.X, v.X)
+	box.Min.Y = Min(box.Min.Y, v.Y)
+	box.Min.Z = Min(box.Min.Z, v.Z)
+	box.Max.X = Max(box.Max.X, v.X)
+	box.Max.Y = Max(box.Max.Y, v.Y)
+	box.Max.Z = Max(box.Max.Z, v.Z)
+	return box
 }
 
-func (box *BoundingBox) Contains(bounds *BoundingBox) bool {
+func (box BoundingBox) Contains(bounds BoundingBox) bool {
 	return !box.IsValid() || (box.Min.X <= bounds.Min.X && box.Min.Y <= bounds.Min.Y && box.Min.Z <= bounds.Min.Z && box.Max.X >= bounds.Max.X && box.Max.Y >= bounds.Max.Y && box.Max.Z >= bounds.Max.Z)
 }
 
-func (box *BoundingBox) Overlaps(bounds *BoundingBox) bool {
+func (box BoundingBox) Overlaps(bounds BoundingBox) bool {
 	if bounds.ContainsVec(box.Min) || bounds.ContainsVec(box.Max) {
 		return true
 	}
@@ -110,18 +98,12 @@ func (box *BoundingBox) Overlaps(bounds *BoundingBox) bool {
 	return false
 }
 
-func (box *BoundingBox) ContainsVec(v Vector3) bool {
+func (box BoundingBox) ContainsVec(v Vector3) bool {
 	return box.Min.X <= v.X && box.Max.X >= v.X && box.Min.Y <= v.Y && box.Max.Y >= v.Y && box.Min.Z <= v.Z && box.Max.Z >= v.Z
 }
 
-func (box *BoundingBox) Inf() *BoundingBox {
-	box.Min.Set(math.MaxFloat32, math.MaxFloat32, math.MaxFloat32)
-	box.Max.Set(math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32)
-	return box
-}
-
-func (box *BoundingBox) Clr() *BoundingBox {
-	box.Min = box.Min.Clr()
-	box.Max = box.Max.Clr()
+func (box BoundingBox) Inf() BoundingBox {
+	box.Min = Vec3(math.MaxFloat32, math.MaxFloat32, math.MaxFloat32)
+	box.Max = Vec3(math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32)
 	return box
 }

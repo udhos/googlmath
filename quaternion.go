@@ -4,38 +4,47 @@ import (
 	"math"
 )
 
-type Quaternion struct {
-	X, Y, Z, W float32
+var IdtQ Quaternion = Quaternion(ZV4)
+
+type Quaternion Vector4
+
+func Qtn(x, y, z, w float32) Quaternion {
+	return Quaternion{x, y, z, w}
 }
 
-func NewQuaternion(x, y, z, w float32) *Quaternion {
-	return &Quaternion{x, y, z, w}
+func (q Quaternion) Scale(scalar float32) Quaternion {
+	return Quaternion{q.X * scalar, q.Y * scalar, q.Z * scalar, q.W * scalar}
 }
 
-func (q *Quaternion) Set(x, y, z, w float32) *Quaternion {
-	q.X = x
-	q.Y = y
-	q.Z = z
-	q.W = w
-	return q
+func (q Quaternion) Dot(q2 Quaternion) float32 {
+	return q.X*q2.X + q.Y*q2.Y + q.Z*q2.Z + q.W*q2.W
 }
 
-func (q *Quaternion) Cpy() *Quaternion {
-	return NewQuaternion(q.X, q.Y, q.Z, q.W)
-}
-
-func (q *Quaternion) Len() float32 {
+// The euclidian length
+func (q Quaternion) Len() float32 {
 	return Sqrt(q.X*q.X + q.Y*q.Y + q.Z*q.Z + q.W*q.W)
 }
 
-// Returns the length of this quaternion without square root
-func (q *Quaternion) Len2() float32 {
+// The squared euclidian length
+func (q Quaternion) Len2() float32 {
 	return q.X*q.X + q.Y*q.Y + q.Z*q.Z + q.W*q.W
 }
 
-// Sets the quaternion to the given euler angles.
+func (q Quaternion) Nor() Quaternion {
+	l := q.Len()
+	if l == 0 {
+		return q
+	}
+	return q.Scale(1 / l)
+}
+
+func (q Quaternion) Eq(q2 Quaternion) bool {
+	return q.X == q2.X && q.Y == q2.Y && q.Z == q2.Z && q.W == q2.W
+}
+
+// Returns the quaternion to the given euler angles.
 // Values in radians
-func (q *Quaternion) SetEulerAngles(yaw, pitch, roll float32) *Quaternion {
+func (q Quaternion) EulerAngles(yaw, pitch, roll float32) Quaternion {
 	num9 := roll * 0.5
 	num6 := Sin(num9)
 	num5 := Cos(num9)
@@ -57,57 +66,25 @@ func (q *Quaternion) SetEulerAngles(yaw, pitch, roll float32) *Quaternion {
 	return q
 }
 
-func (q *Quaternion) Nor() *Quaternion {
-	l := q.Len2()
-	if l != 0 && Abs(l-1) > NORMALIZATION_TOLERANCE {
-		l = Sqrt(l)
-		q.X /= l
-		q.Y /= l
-		q.Z /= l
-		q.W /= l
-	}
-	return q
-}
-
 // Conjugate the quaternion.
-func (q *Quaternion) Conjugate() *Quaternion {
-	q.X = -q.X
-	q.Y = -q.Y
-	q.Z = -q.Z
-	return q
-}
-
-// Multiplies this quaternion with another one
-func (q *Quaternion) Mul(quaternion *Quaternion) *Quaternion {
-	newX := q.W*quaternion.X + q.X*quaternion.W + q.Y*quaternion.Z - q.Z*quaternion.Y
-	newY := q.W*quaternion.Y + q.Y*quaternion.W + q.Z*quaternion.X - q.X*quaternion.Z
-	newZ := q.W*quaternion.Z + q.Z*quaternion.W + q.X*quaternion.Y - q.Y*quaternion.X
-	newW := q.W*quaternion.W - q.X*quaternion.X - q.Y*quaternion.Y - q.Z*quaternion.Z
-	q.X = newX
-	q.Y = newY
-	q.Z = newZ
-	q.W = newW
-	return q
-}
-
-func (q *Quaternion) Idt() *Quaternion {
-	return q.Set(0, 0, 0, 1)
+func (q Quaternion) Conjugate() Quaternion {
+	return Quaternion{-q.X, -q.Y, -q.Z, q.W}
 }
 
 // Sets the quaternion components from the given axis and angle around that axis.
 // Angle in radians
-func (q *Quaternion) SetFromAxis(x, y, z, angle float32) *Quaternion {
+func (q Quaternion) FromAxis(x, y, z, angle float32) Quaternion {
 	lSin := Sin(angle / 2)
 	lCos := Cos(angle / 2)
-	return q.Set(q.X*lSin, q.Y*lSin, q.Z*lSin, lCos).Nor()
+	return Quaternion{q.X * lSin, q.Y * lSin, q.Z * lSin, lCos}.Nor()
 }
 
-func (q *Quaternion) SetFromMatrix(m *Matrix4) *Quaternion {
-	return q.SetFromAxes(m.M11, m.M12, m.M13, m.M21, m.M22, m.M23, m.M31, m.M32, m.M33)
+func (q Quaternion) FromMatrix(m *Matrix4) Quaternion {
+	return q.FromAxes(m.M11, m.M12, m.M13, m.M21, m.M22, m.M23, m.M31, m.M32, m.M33)
 }
 
 // Sets the Quaternion from the given x-, y- and z-axis which have to be orthonormal.
-func (q *Quaternion) SetFromAxes(xx, xy, xz, yx, yy, yz, zx, zy, zz float32) *Quaternion {
+func (q Quaternion) FromAxes(xx, xy, xz, yx, yy, yz, zx, zy, zz float32) Quaternion {
 	m00 := float64(xx)
 	m01 := float64(xy)
 	m02 := float64(xz)
@@ -146,19 +123,19 @@ func (q *Quaternion) SetFromAxes(xx, xy, xz, yx, yy, yz, zx, zy, zz float32) *Qu
 		w = (m10 - m01) * s
 	}
 
-	return q.Set(float32(x), float32(y), float32(z), float32(w))
+	return Quaternion{float32(x), float32(y), float32(z), float32(w)}
 }
 
 // Set this quaternion to the rotation between two vectors.
-func (q *Quaternion) SetFromCross(v1, v2 Vector3) *Quaternion {
+func (q Quaternion) FromCross(v1, v2 Vector3) Quaternion {
 	dot := Clampf(v1.Dot(v2), -1.0, 1.0)
 	angle := ToDegrees(Acos(dot))
-	return q.SetFromAxis(v1.Y*v2.Z-v1.Z*v2.Y, v1.Z*v2.X-v1.X*v2.Z, v1.X*v2.Y-v1.Y*v2.X, angle)
+	return q.FromAxis(v1.Y*v2.Z-v1.Z*v2.Y, v1.Z*v2.X-v1.X*v2.Z, v1.X*v2.Y-v1.Y*v2.X, angle)
 }
 
 // Spherical linear interpolation between this quaternion and the other quaternion, based on the alpha value in the range [0,1].
-func (q *Quaternion) Slerp(end *Quaternion, alpha float32) *Quaternion {
-	if q.Equals(end) {
+func (q Quaternion) Slerp(end Quaternion, alpha float32) Quaternion {
+	if q.Eq(end) {
 		return q
 	}
 
@@ -187,29 +164,8 @@ func (q *Quaternion) Slerp(end *Quaternion, alpha float32) *Quaternion {
 	return q
 }
 
-func (q *Quaternion) Equals(other *Quaternion) bool {
-	if q == other {
-		return true
-	}
-	return q.X == other.X && q.Y == other.Y && q.Z == other.Z && q.W == other.W
-}
-
-// Dot product between this and the other quaternion.
-func (q *Quaternion) Dot(other *Quaternion) float32 {
-	return q.X*other.X + q.Y*other.Y + q.Z*other.Z + q.W*other.W
-}
-
-// Multiplies the components of this quaternion with the given scalar.
-func (q *Quaternion) Scale(scalar float32) *Quaternion {
-	q.X *= scalar
-	q.Y *= scalar
-	q.Z *= scalar
-	q.W *= scalar
-	return q
-}
-
 // Fills a 4x4 matrix with the rotation matrix represented by this quaternion.
-func (q *Quaternion) Matrix() *Matrix4 {
+func (q Quaternion) Matrix() *Matrix4 {
 	xx := q.X * q.X
 	xy := q.X * q.Y
 	xz := q.X * q.Z
