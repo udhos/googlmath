@@ -26,12 +26,8 @@ func (p Point3) Div(q Point3) Point3 {
 	return Point3{p.X / q.X, p.Y / q.Y, p.Z / q.Z}
 }
 
-func (p Point3) Equals(q Point3) bool {
+func (p Point3) Eq(q Point3) bool {
 	return p.X == q.X && p.Y == q.Y && p.Z == q.Z
-}
-
-func (p Point3) Vector3() Vector3 {
-	return Vec3(float32(p.X), float32(p.Y), float32(p.Z))
 }
 
 func (p Point3) String() string {
