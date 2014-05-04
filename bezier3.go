@@ -3,7 +3,7 @@ package math
 // Implementation of the Bezier curve in three dimensions.
 type Bezier3 []Vector3
 
-func NewBezier3(points ...Vector3) Path3 {
+func Bzr3(points ...Vector3) Path3 {
 	return Bezier3(points)
 }
 

@@ -3,7 +3,7 @@ package math
 // Implementation of the Bezier curve in two dimensions.
 type Bezier2 []Vector2
 
-func NewBezier2(points ...Vector2) Path2 {
+func Bzr2(points ...Vector2) Path2 {
 	return Bezier2(points)
 }
 
