@@ -34,8 +34,10 @@ func (r Rectangle) Overlaps(s Rectangle) bool {
 	return r.Min.X < s.Max.X && s.Min.X < r.Max.X && r.Min.Y < s.Max.Y && s.Min.Y < r.Max.Y
 }
 
-func (r Rectangle) ContainsVec2(v Vector2) bool {
-	return r.Min.X < v.X && r.Max.X > v.X && r.Min.Y < v.Y && r.Max.Y > v.Y
+// Contains reports whether r contains v.
+// Note that r is an inclusive bound.
+func (r Rectangle) Contains(v Vector2) bool {
+	return r.Min.X <= v.X && r.Max.X >= v.X && r.Min.Y <= v.Y && r.Max.Y >= v.Y
 }
 
 // Empty reports whether the rectangle contains no points.
