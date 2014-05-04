@@ -76,13 +76,13 @@ func (s *S) TestPointDiv(c *C) {
 	}
 }
 
-type PointEqTestValue struct {
+type TestValue_2P_B struct {
 	p0, p1 Point
 	r      bool
 }
 
 func (s *S) TestPointEq(c *C) {
-	tests := []PointEqTestValue{
+	tests := []TestValue_2P_B{
 		{Point{0, 0}, Point{0, 0}, true},
 		{Point{-3, 2}, Point{-3, 2}, true},
 		{Point{2, 0}, Point{0, 0}, false},
@@ -96,13 +96,13 @@ func (s *S) TestPointEq(c *C) {
 	}
 }
 
-type PointStringTestValue struct {
+type TestValue_P_Str struct {
 	p Point
 	r string
 }
 
 func (s *S) TestPointString(c *C) {
-	tests := []PointStringTestValue{
+	tests := []TestValue_P_Str{
 		{Point{0, 0}, "(0,0)"},
 		{Point{-3, 2}, "(-3,2)"},
 		{Point{200, 0}, "(200,0)"},

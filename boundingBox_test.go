@@ -4,46 +4,46 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-type BB2Vec3TestValue struct {
+type TestValue_2V3_BB struct {
 	Min, Max Vector3
 	Expected BoundingBox
 }
 
-type BBBoolTestValue struct {
+type TestValue_BB_B struct {
 	Value    BoundingBox
 	Expected bool
 }
 
-type BB2BoolTestValue struct {
+type TestValue_2BB_B struct {
 	Box      BoundingBox
 	Bounds   BoundingBox
 	Expected bool
 }
 
-type BBVec3ArrayTestValue struct {
+type TestValue_BB_V3s struct {
 	Value    BoundingBox
 	Expected []Vector3
 }
 
-type BBVec3TestValue struct {
+type TestValue_BB_V3 struct {
 	Value    BoundingBox
 	Expected Vector3
 }
 
-type BBVec3BoolTestValue struct {
+type TestValue_BBV3_B struct {
 	Value    BoundingBox
 	Vec      Vector3
 	Expected bool
 }
 
 func (s *S) TestBBox(c *C) {
-	tests := []BB2Vec3TestValue{
-		BB2Vec3TestValue{
+	tests := []TestValue_2V3_BB{
+		TestValue_2V3_BB{
 			Min:      Vec3(0, 0, 0),
 			Max:      Vec3(1, 2, 3),
 			Expected: BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)},
 		},
-		BB2Vec3TestValue{
+		TestValue_2V3_BB{
 			Min:      Vec3(-1, -2.2, 0),
 			Max:      Vec3(2, 3, 3),
 			Expected: BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
@@ -56,13 +56,13 @@ func (s *S) TestBBox(c *C) {
 }
 
 func (s *S) TestBBoxOrder(c *C) {
-	tests := []BB2Vec3TestValue{
-		BB2Vec3TestValue{
+	tests := []TestValue_2V3_BB{
+		TestValue_2V3_BB{
 			Min:      Vec3(0, 0, 0),
 			Max:      Vec3(1, 2, 3),
 			Expected: BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)},
 		},
-		BB2Vec3TestValue{
+		TestValue_2V3_BB{
 			Min:      Vec3(-1, -2.2, 0),
 			Max:      Vec3(2, 3, 3),
 			Expected: BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)},
@@ -77,28 +77,28 @@ func (s *S) TestBBoxOrder(c *C) {
 }
 
 func (s *S) TestBBoxIsValid(c *C) {
-	tests := []BBBoolTestValue{
-		BBBoolTestValue{
+	tests := []TestValue_BB_B{
+		TestValue_BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			true,
 		},
-		BBBoolTestValue{
+		TestValue_BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(1.2, 2.3, 4.3)),
 			true,
 		},
-		BBBoolTestValue{
+		TestValue_BB_B{
 			BBox(Vec3(-2, -1, 1), Vec3(1, 0, 3)),
 			true,
 		},
-		BBBoolTestValue{
+		TestValue_BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
 			false,
 		},
-		BBBoolTestValue{
+		TestValue_BB_B{
 			BBox(Vec3(2, 2, 2), Vec3(1, 1, 1)),
 			false,
 		},
-		BBBoolTestValue{
+		TestValue_BB_B{
 			BBox(Vec3(0, 2, 1), Vec3(0, 2, 1)),
 			false,
 		},
@@ -110,8 +110,8 @@ func (s *S) TestBBoxIsValid(c *C) {
 }
 
 func (s *S) TestBBoxCorners(c *C) {
-	tests := []BBVec3ArrayTestValue{
-		BBVec3ArrayTestValue{
+	tests := []TestValue_BB_V3s{
+		TestValue_BB_V3s{
 			BBox(Vec3(-1, -2, -3), Vec3(1, 2, 3)),
 			[]Vector3{
 				Vec3(-1, -2, -3),
@@ -132,20 +132,20 @@ func (s *S) TestBBoxCorners(c *C) {
 }
 
 func (s *S) TestBBoxDimension(c *C) {
-	tests := []BBVec3TestValue{
-		BBVec3TestValue{
+	tests := []TestValue_BB_V3{
+		TestValue_BB_V3{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			Vec3(1, 1, 1),
 		},
-		BBVec3TestValue{
+		TestValue_BB_V3{
 			BBox(Vec3(0, 0, 0), Vec3(0, 0, 0)),
 			Vec3(0, 0, 0),
 		},
-		BBVec3TestValue{
+		TestValue_BB_V3{
 			BBox(Vec3(-1, -1, 0), Vec3(1, 1, 1)),
 			Vec3(2, 2, 1),
 		},
-		BBVec3TestValue{
+		TestValue_BB_V3{
 			BBox(Vec3(-1, -1, -1), Vec3(-2, -2, -2)),
 			Vec3(-1, -1, -1),
 		},
@@ -157,23 +157,23 @@ func (s *S) TestBBoxDimension(c *C) {
 }
 
 func (s *S) TestBBoxContainsVec(c *C) {
-	tests := []BBVec3BoolTestValue{
-		BBVec3BoolTestValue{
+	tests := []TestValue_BBV3_B{
+		TestValue_BBV3_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0.5, 0.5, 0),
 			true,
 		},
-		BBVec3BoolTestValue{
+		TestValue_BBV3_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			Vec3(0.5, 0.5, 0),
 			true,
 		},
-		BBVec3BoolTestValue{
+		TestValue_BBV3_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0.5, 0.5, -1),
 			false,
 		},
-		BBVec3BoolTestValue{
+		TestValue_BBV3_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			Vec3(0, 0, 0),
 			true,
@@ -186,18 +186,18 @@ func (s *S) TestBBoxContainsVec(c *C) {
 }
 
 func (s *S) TestBBoxOverlaps(c *C) {
-	tests := []BB2BoolTestValue{
-		BB2BoolTestValue{
+	tests := []TestValue_2BB_B{
+		TestValue_2BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 0)),
 			BBox(Vec3(-1, -1, 0), Vec3(0, 0, 0)),
 			true,
 		},
-		BB2BoolTestValue{
+		TestValue_2BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			BBox(Vec3(-1, -1, -1), Vec3(-0.1, -0.1, -0.1)),
 			false,
 		},
-		BB2BoolTestValue{
+		TestValue_2BB_B{
 			BBox(Vec3(0, 0, 0), Vec3(1, 1, 1)),
 			BBox(Vec3(-1, 0, 0), Vec3(0, 0, 0.5)),
 			true,

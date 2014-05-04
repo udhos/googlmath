@@ -70,14 +70,14 @@ func (s *S) TestVector4Div(c *C) {
 	}
 }
 
-type Vector4_V4F32_V4 struct {
+type TestValue_V4F32_V4 struct {
 	v Vector4
 	f float32
 	e Vector4
 }
 
 func (s *S) TestVector4Scale(c *C) {
-	tests := []Vector4_V4F32_V4{
+	tests := []TestValue_V4F32_V4{
 		{Vector4{2, 5, 0, 0.1}, 1.0, Vector4{2, 5, 0, 0.1}},
 		{Vector4{2, 5, 0, 0.1}, 0, Vector4{0, 0, 0, 0}},
 		{Vector4{-1, 5, 0, 0.1}, -1.0, Vector4{1, -5, 0, -0.1}},
@@ -89,13 +89,13 @@ func (s *S) TestVector4Scale(c *C) {
 	}
 }
 
-type Vector4TestValue_V4_F32 struct {
+type TestValue_V4_F32 struct {
 	v Vector4
 	e float32
 }
 
 func (s *S) TestVector4Len(c *C) {
-	tests := []Vector4TestValue_V4_F32{
+	tests := []TestValue_V4_F32{
 		{Vector4{2, 0, 0, 0}, 2.0},
 		{Vector4{0, 1, 0, 0}, 1.0},
 		{Vector4{0, 0, 0, 0}, 0},
@@ -109,7 +109,7 @@ func (s *S) TestVector4Len(c *C) {
 }
 
 func (s *S) TestVector4Len2(c *C) {
-	tests := []Vector4TestValue_V4_F32{
+	tests := []TestValue_V4_F32{
 		{Vector4{2, 0, 0, 0}, 4.0},
 		{Vector4{0, 1, 0, 0}, 1.0},
 		{Vector4{0, 0, 0, 0}, 0},
@@ -134,13 +134,13 @@ func (s *S) TestVector4Nor(c *C) {
 	}
 }
 
-type Vector4TestValue_V4_B struct {
+type TestValue_V4_B struct {
 	v Vector4
 	e bool
 }
 
 func (s *S) TestVector4IsZero(c *C) {
-	tests := []Vector4TestValue_V4_B{
+	tests := []TestValue_V4_B{
 		{Vector4{0, 0, 0, 0}, true},
 		{Vector4{1, -1, 1, 1}, false},
 		{Vector4{2, 0, 1, 1}, false},
@@ -153,7 +153,7 @@ func (s *S) TestVector4IsZero(c *C) {
 }
 
 func (s *S) TestVector4IsUnit(c *C) {
-	tests := []Vector4TestValue_V4_B{
+	tests := []TestValue_V4_B{
 		{Vector4{1, 0, 0, 0}, true},
 		{Vector4{0, 0.0, 0.408248, 0}, false},
 		{Vector4{-1, 0, 0, 0}, true},
