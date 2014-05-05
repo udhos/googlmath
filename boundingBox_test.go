@@ -55,6 +55,55 @@ func (s *S) TestBBox(c *C) {
 	}
 }
 
+type TestValue_BB_F32 struct {
+	b BoundingBox
+	e float32
+}
+
+func (s *S) TestBBoxDx(c *C) {
+	tests := []TestValue_BB_F32{
+		{BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)}, 1.0},
+		{BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)}, 3.0},
+	}
+	for _, t := range tests {
+		obtained := t.b.Dx()
+		c.Check(obtained, Equals, t.e)
+	}
+}
+
+func (s *S) TestBBoxDy(c *C) {
+	tests := []TestValue_BB_F32{
+		{BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)}, 2.0},
+		{BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)}, 5.2},
+	}
+	for _, t := range tests {
+		obtained := t.b.Dy()
+		c.Check(obtained, Equals, t.e)
+	}
+}
+
+func (s *S) TestBBoxDz(c *C) {
+	tests := []TestValue_BB_F32{
+		{BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)}, 3.0},
+		{BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)}, 3.0},
+	}
+	for _, t := range tests {
+		obtained := t.b.Dz()
+		c.Check(obtained, Equals, t.e)
+	}
+}
+
+func (s *S) TestBBoxCenter(c *C) {
+	tests := []TestValue_BB_V3{
+		{BoundingBox{Min: Vec3(0, 0, 0), Max: Vec3(1, 2, 3)}, Vec3(0.5, 1, 1.5)},
+		{BoundingBox{Min: Vec3(-1, -2.2, 0), Max: Vec3(2, 3, 3)}, Vec3(0.5, 0.4, 1.5)},
+	}
+	for _, t := range tests {
+		obtained := t.Value.Center()
+		c.Check(obtained, Vector3Check, t.Expected)
+	}
+}
+
 func (s *S) TestBBoxOrder(c *C) {
 	tests := []TestValue_2V3_BB{
 		TestValue_2V3_BB{
