@@ -161,15 +161,45 @@ func (s *S) TestVector3Distance2(c *C) {
 }
 
 func (s *S) TestVector3Nor(c *C) {
-	// TODO
+	tests := []struct{ v, e Vector3 }{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}},
+		{Vector3{1, -1, 1}, Vector3{0.57735, -0.57735, 0.57735}},
+		{Vector3{2, 0, 1}, Vector3{0.894427, 0, 0.447214}},
+	}
+	for _, t := range tests {
+		obtained := t.v.Nor()
+		c.Assert(obtained, Vector3Check, t.e)
+	}
 }
 
 func (s *S) TestVector3Dot(c *C) {
-	// TODO
+	tests := []TestValue_2V3_F32{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}, 0},
+		{Vector3{1, 2, 3}, Vector3{3, 4, 5}, 26},
+		{Vector3{1.1, 0.2, 1.3}, Vector3{-3.3, 4.2, 5.5}, 4.36},
+	}
+	for _, t := range tests {
+		obtained := t.v0.Dot(t.v1)
+		c.Assert(obtained, EqualsFloat32, t.e)
+	}
+}
+
+type TestValue_2V3_V3 struct {
+	v0 Vector3
+	v1 Vector3
+	e  Vector3
 }
 
 func (s *S) TestVector3Cross(c *C) {
-	// TODO
+	tests := []TestValue_2V3_V3{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}, Vector3{0, 0, 0}},
+		{Vector3{0.1, -0.2, 102.3}, Vector3{-3.3, -14.2, 0.5}, Vector3{1452.56, -337.64, -2.08}},
+		{Vector3{1.1, 0.2, 1.3}, Vector3{-3.3, 4.2, 5.5}, Vector3{-4.36, -10.34, 5.28}},
+	}
+	for _, t := range tests {
+		obtained := t.v0.Cross(t.v1)
+		c.Assert(obtained, Vector3Check, t.e)
+	}
 }
 
 // TODO MulMatrix
@@ -180,14 +210,44 @@ func (s *S) TestVector3Cross(c *C) {
 // TODO Lerp
 // TODO Slerp
 
-func (s *S) TestVector3Limit(c *C) {
+type TestValue_V3F32_V3 struct {
+	v Vector3
+	f float32
+	e Vector3
+}
 
+func (s *S) TestVector3Limit(c *C) {
+	tests := []TestValue_V3F32_V3{
+		{Vector3{0, 0, 0}, 0, Vector3{0, 0, 0}},
+		{Vector3{2, -2, 1}, 1, Vector3{2.0 / 3, -2.0 / 3, 1.0 / 3}},
+		{Vector3{2, 2, 2}, 1, Vector3{0.57735, 0.57735, 0.57735}},
+	}
+	for _, t := range tests {
+		obtained := t.v.Limit(t.f)
+		c.Assert(obtained, Vector3Check, t.e)
+	}
 }
 
 func (s *S) TestVector3Scale(c *C) {
-
+	tests := []TestValue_V3F32_V3{
+		{Vector3{0, 0, 0}, 0, Vector3{0, 0, 0}},
+		{Vector3{2, -2, 1}, 1, Vector3{2, -2, 1}},
+		{Vector3{2, 1, 0}, -2.2, Vector3{-4.4, -2.2, 0}},
+	}
+	for _, t := range tests {
+		obtained := t.v.Scale(t.f)
+		c.Assert(obtained, Vector3Check, t.e)
+	}
 }
 
 func (s *S) TestVector3Invert(c *C) {
-
+	tests := []struct{ v, e Vector3 }{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}},
+		{Vector3{2, -2, 1}, Vector3{-2, 2, -1}},
+		{Vector3{3.3, 1, 0}, Vector3{-3.3, -1, 0}},
+	}
+	for _, t := range tests {
+		obtained := t.v.Invert()
+		c.Assert(obtained, Vector3Check, t.e)
+	}
 }
