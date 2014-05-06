@@ -32,7 +32,7 @@ func (checker *Float32EqualChecker) Check(params []interface{}, names []string) 
 }
 
 func NearlyEqualFloat32(a, b float32) bool {
-	if a == b {
+	if a == b || IsNaN(a) && IsNaN(b) {
 		return true
 	}
 	diff := Abs(a - b)
