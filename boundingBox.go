@@ -6,6 +6,13 @@ import (
 
 var ZBB BoundingBox
 
+// An infinity bounding box has Max <= Min in all dimensions
+// and is always invalid. See BoundingBox.IsInvalid().
+var BBoxInf = BoundingBox{
+	Vector3{math.MaxFloat32, math.MaxFloat32, math.MaxFloat32},
+	Vector3{math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32},
+}
+
 type BoundingBox struct {
 	Min Vector3
 	Max Vector3
@@ -41,6 +48,8 @@ func (box BoundingBox) Order() BoundingBox {
 	return BoundingBox{min, max}
 }
 
+// IsValid checks whether the box has valid min, max values.
+// A box is valid if Min < Max in all dimensions.
 func (box BoundingBox) IsValid() bool {
 	return box.Min.X < box.Max.X && box.Min.Y < box.Max.Y && box.Min.Z < box.Max.Z
 }
@@ -82,6 +91,7 @@ func (box BoundingBox) ExtendByVec(v Vector3) BoundingBox {
 	return box
 }
 
+// Note: An invalid box always returns true. See BoundingBox.IsValid(),
 func (box BoundingBox) Contains(bounds BoundingBox) bool {
 	return !box.IsValid() || (box.Min.X <= bounds.Min.X && box.Min.Y <= bounds.Min.Y && box.Min.Z <= bounds.Min.Z && box.Max.X >= bounds.Max.X && box.Max.Y >= bounds.Max.Y && box.Max.Z >= bounds.Max.Z)
 }
@@ -100,10 +110,4 @@ func (box BoundingBox) Overlaps(bounds BoundingBox) bool {
 
 func (box BoundingBox) ContainsVec(v Vector3) bool {
 	return box.Min.X <= v.X && box.Max.X >= v.X && box.Min.Y <= v.Y && box.Max.Y >= v.Y && box.Min.Z <= v.Z && box.Max.Z >= v.Z
-}
-
-func (box BoundingBox) Inf() BoundingBox {
-	box.Min = Vec3(math.MaxFloat32, math.MaxFloat32, math.MaxFloat32)
-	box.Max = Vec3(math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32, math.SmallestNonzeroFloat32)
-	return box
 }
