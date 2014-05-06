@@ -79,20 +79,85 @@ func (s *S) TestVector3Div(c *C) {
 	}
 }
 
+type TestValue_V3_F32 struct {
+	v Vector3
+	e float32
+}
+
 func (s *S) TestVector3Len(c *C) {
-	// TODO
+	tests := []TestValue_V3_F32{
+		{Vector3{0, 0, 0}, 0},
+		{Vector3{1, 0, 0}, 1},
+		{Vector3{0, 1, 0}, 1},
+		{Vector3{0, 0, 1}, 1},
+		{Vector3{-1, 0, 0}, 1},
+		{Vector3{0, -1, 0}, 1},
+		{Vector3{0, 0, -1}, 1},
+		{Vector3{2, 1, 3}, 3.741657386},
+	}
+	for _, t := range tests {
+		obtained := t.v.Len()
+		c.Assert(obtained, Equals, t.e)
+	}
 }
 
 func (s *S) TestVector3Len2(c *C) {
-	// TODO
+	tests := []TestValue_V3_F32{
+		{Vector3{0, 0, 0}, 0},
+		{Vector3{1, 0, 0}, 1},
+		{Vector3{0, 1, 0}, 1},
+		{Vector3{0, 0, 1}, 1},
+		{Vector3{-1, 0, 0}, 1},
+		{Vector3{0, -1, 0}, 1},
+		{Vector3{0, 0, -1}, 1},
+		{Vector3{2, 1, 3}, 14},
+	}
+	for _, t := range tests {
+		obtained := t.v.Len2()
+		c.Assert(obtained, Equals, t.e)
+	}
+}
+
+type TestValue_2V3_F32 struct {
+	v0 Vector3
+	v1 Vector3
+	e  float32
 }
 
 func (s *S) TestVector3Distance(c *C) {
-	// TODO
+	tests := []TestValue_2V3_F32{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}, 0},
+		{Vector3{1, 0, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 1, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 0, 1}, Vector3{0, 0, 0}, 1},
+		{Vector3{-1, 0, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, -1, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 0, -1}, Vector3{0, 0, 0}, 1},
+		{Vector3{2, 1, 3}, Vector3{0, 0, 0}, 3.741657386},
+		{Vector3{2, 0, 0}, Vector3{4, 0, 0}, 2},
+	}
+	for _, t := range tests {
+		obtained := t.v0.Distance(t.v1)
+		c.Assert(obtained, Equals, t.e)
+	}
 }
 
 func (s *S) TestVector3Distance2(c *C) {
-	// TODO
+	tests := []TestValue_2V3_F32{
+		{Vector3{0, 0, 0}, Vector3{0, 0, 0}, 0},
+		{Vector3{1, 0, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 1, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 0, 1}, Vector3{0, 0, 0}, 1},
+		{Vector3{-1, 0, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, -1, 0}, Vector3{0, 0, 0}, 1},
+		{Vector3{0, 0, -1}, Vector3{0, 0, 0}, 1},
+		{Vector3{2, 1, 3}, Vector3{0, 0, 0}, 14},
+		{Vector3{2, 0, 0}, Vector3{4, 0, 0}, 4},
+	}
+	for _, t := range tests {
+		obtained := t.v0.Distance2(t.v1)
+		c.Assert(obtained, Equals, t.e)
+	}
 }
 
 func (s *S) TestVector3Nor(c *C) {
