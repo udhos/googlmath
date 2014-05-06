@@ -4,6 +4,11 @@ package math
 // This assumes that the point is on the plane of the triangle.
 // No check is performed that this is the case.
 func IsPointInTriangle(point, t1, t2, t3 Vector3) bool {
+	// TODO Improve algorithm
+	if t1.Eq(t2) || t2.Eq(t3) || t3.Eq(t1) {
+		return false
+	}
+
 	v0 := t1.Sub(point)
 	v1 := t2.Sub(point)
 	v2 := t3.Sub(point)
