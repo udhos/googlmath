@@ -9,21 +9,21 @@ func Bzr3(points ...Vector3) Path3 {
 
 // The value of the path at t where 0<=t<=1
 func (b Bezier3) ValueAt(t float32) Vector3 {
-	out := Vec3(0, 0, 0)
-	n := len(b)
-
-	if n == 2 {
-		out = Linear3(t, b[0], b[1])
-	} else if n == 3 {
-		out = Quadratic3(t, b[0], b[1], b[2])
-	} else if n == 4 {
-		out = Cubic3(t, b[0], b[1], b[2], b[3])
+	if len(b) == 2 {
+		return Linear3(t, b[0], b[1])
+	} else if len(b) == 3 {
+		return Quadratic3(t, b[0], b[1], b[2])
+	} else if len(b) == 4 {
+		return Cubic3(t, b[0], b[1], b[2], b[3])
 	}
-	return out
+	return Vector3{NaN(), NaN(), NaN()}
 }
 
 // The approximated value (between 0 and 1) on the path which is closest to the specified value.
 func (b Bezier3) Approximate(p3 Vector3) float32 {
+	if len(b) < 2 {
+		return NaN()
+	}
 	p1 := b[0]
 	p2 := b[len(b)-1]
 
