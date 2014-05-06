@@ -1,6 +1,7 @@
 package math
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -194,4 +195,8 @@ func (q Quaternion) Matrix() *Matrix4 {
 	matrix.M34 = 0
 	matrix.M44 = 1
 	return matrix
+}
+
+func (q Quaternion) String() string {
+	return fmt.Sprintf("(%g,%g,%g,%g)", q.X, q.Y, q.Z, q.W)
 }
