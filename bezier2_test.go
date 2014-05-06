@@ -32,6 +32,7 @@ func (s *S) TestBezier2ValueAt(c *C) {
 		{Bezier2(nil), 0.5, Vec2(NaN(), NaN())},
 		{Bezier2{Vec2(0, 0), Vec2(1, 1)}, 0.5, Vec2(0.5, 0.5)},
 		{Bezier2{Vec2(0, 0), Vec2(-1, -1), Vec2(2, 2)}, 0.5, Vec2(0, 0)},
+		{Bezier2{Vec2(0, 0), Vec2(1, 1), Vec2(2, 2), Vec2(3, 3)}, 0.5, Vec2(1.5, 1.5)},
 	}
 	for _, t := range tests {
 		obtained := t.p.ValueAt(t.f)
