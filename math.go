@@ -99,7 +99,7 @@ func NextPowerOfTwo(value int) int {
 }
 
 func IsPowerOfTwo(value int) bool {
-	return value != 0 && (value&value-1) == 0
+	return value != 0 && value&(value-1) == 0
 }
 
 func ToRadians(degrees float32) float32 {
@@ -110,6 +110,7 @@ func ToDegrees(radians float32) float32 {
 	return radians * RadiansToDegrees
 }
 
+// Note: No check is performed if min<max is true
 func Clampi(value, min, max int) int {
 	if value < min {
 		return min
@@ -120,6 +121,8 @@ func Clampi(value, min, max int) int {
 	return value
 }
 
+// Clampf equals Min(max, Max(min, value))
+// Note: No check is performed if min<max is true
 func Clampf(value, min, max float32) float32 {
 	if value < min {
 		return min
