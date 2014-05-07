@@ -1,6 +1,7 @@
 package math
 
 import (
+	"fmt"
 	. "gopkg.in/check.v1"
 )
 
@@ -202,13 +203,57 @@ func (s *S) TestVector3Cross(c *C) {
 	}
 }
 
-// TODO MulMatrix
-// TODO Prj
-// TODO Rot
-// TODO IsUnit
-// TODO IsZero
-// TODO Lerp
-// TODO Slerp
+type TestValue_V3_B struct {
+	v Vector3
+	e bool
+}
+
+func (s *S) TestVector3IsUnit(c *C) {
+	tests := []TestValue_V3_B{
+		{Vector3{0, 0, 0}, false},
+		{Vector3{0.1, -0.2, 102.3}, false},
+		{Vector3{1.1, 0.2, 1.3}, false},
+		{Vector3{1, 0, 0}, true},
+		{Vector3{0, 1, 0}, true},
+		{Vector3{0, 0, 1}, true},
+		{Vector3{-1, 0, 0}, true},
+		{Vector3{0, -1, 0}, true},
+		{Vector3{0, 0, -1}, true},
+		{Vector3{0.707106, 0.707106, 0}, false},
+	}
+	for _, t := range tests {
+		obtained := t.v.IsUnit()
+		c.Assert(obtained, Equals, t.e)
+	}
+}
+
+func (s *S) TestVector3IsZero(c *C) {
+	tests := []TestValue_V3_B{
+		{ZV3, true},
+		{Vector3{0, 0, 0}, true},
+		{Vector3{0.1, -0.2, 102.3}, false},
+		{Vector3{1.1, 0.2, 1.3}, false},
+		{Vector3{1, 0, 0}, false},
+		{Vector3{0, 1, 0}, false},
+		{Vector3{0, 0, 1}, false},
+		{Vector3{-1, 0, 0}, false},
+		{Vector3{0, -1, 0}, false},
+		{Vector3{0, 0, -1}, false},
+		{Vector3{0.707106, 0.707106, 0}, false},
+	}
+	for _, t := range tests {
+		obtained := t.v.IsZero()
+		c.Assert(obtained, Equals, t.e)
+	}
+}
+
+func (s *S) TestVector3Lerp(c *C) {
+	// TODO
+}
+
+func (s *S) TestVector3Slerp(c *C) {
+	// TODO
+}
 
 type TestValue_V3F32_V3 struct {
 	v Vector3
@@ -249,5 +294,18 @@ func (s *S) TestVector3Invert(c *C) {
 	for _, t := range tests {
 		obtained := t.v.Invert()
 		c.Assert(obtained, Vector3Check, t.e)
+	}
+}
+
+func (s *S) TestVector3String(c *C) {
+	tests := []Vector3{
+		Vector3{0, 0, 0}, Vector3{0, 0, 0},
+		Vector3{1, -1, 1}, Vector3{-1, 1, -1},
+		Vector3{2, 0, 1}, Vector3{-2, 0, -1},
+		Vector3{0.816497, 0.0, 0.408248}, Vector3{-0.816497, 0.0, -0.408248},
+	}
+	for _, v := range tests {
+		actual := v.String()
+		c.Assert(actual, Equals, fmt.Sprintf("%v", v))
 	}
 }

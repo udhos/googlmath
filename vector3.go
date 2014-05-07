@@ -84,11 +84,14 @@ func (vec Vector3) IsZero() bool {
 	return vec.X == 0 && vec.Y == 0 && vec.Z == 0
 }
 
-// Linearly interpolates between this vector and the target vector by alpha which is in the range [0,1].
+// Linearly interpolates between this vector and the target vector by alpha which is in the range [0:1].
 func (vec Vector3) Lerp(target Vector3, alpha float32) Vector3 {
+	if alpha > 1.0 || alpha < 0 {
+		panic("alpha is not in the range [0:1]")
+	}
+
 	v := vec.Scale(1.0 - alpha)
-	v = v.Add(target.Scale(alpha))
-	return v
+	return v.Add(target.Scale(alpha))
 }
 
 // Spherically interpolates between this vector and the target vector by alpha which is in the range [0,1].
