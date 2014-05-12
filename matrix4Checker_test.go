@@ -16,16 +16,16 @@ func (checker *Matrix4Checker) Check(params []interface{}, names []string) (bool
 	if len(params) != 2 {
 		return false, "Param length not 2"
 	}
-	var m1, m2 *Matrix4
+	var m1, m2 Matrix4
 	var ok bool
 
-	m1, ok = (params[0]).(*Matrix4)
+	m1, ok = (params[0]).(Matrix4)
 	if ok == false {
-		return false, "Param[0] not a *Matrix4 type"
+		return false, "Param[0] not a Matrix4 type"
 	}
-	m2, ok = (params[1]).(*Matrix4)
+	m2, ok = (params[1]).(Matrix4)
 	if ok == false {
-		return false, "Param[1] not a *Matrix4 type"
+		return false, "Param[1] not a Matrix4 type"
 	}
 
 	return NearlyEqualFloat32(m1.M11, m2.M11) && NearlyEqualFloat32(m1.M12, m2.M12) && NearlyEqualFloat32(m1.M13, m2.M13) && NearlyEqualFloat32(m1.M14, m2.M14) &&

@@ -166,7 +166,7 @@ func (q Quaternion) Slerp(end Quaternion, alpha float32) Quaternion {
 }
 
 // Fills a 4x4 matrix with the rotation matrix represented by this quaternion.
-func (q Quaternion) Matrix() *Matrix4 {
+func (q Quaternion) Matrix() Matrix4 {
 	xx := q.X * q.X
 	xy := q.X * q.Y
 	xz := q.X * q.Z

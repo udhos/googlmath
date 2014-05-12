@@ -11,12 +11,14 @@ type Matrix4 struct {
 	M41, M42, M43, M44 float32
 }
 
-func NewMatrix4() *Matrix4 {
-	return &Matrix4{}
+var ZMatrix4 = Matrix4{}
+
+func NewMatrix4() Matrix4 {
+	return Matrix4{}
 }
 
-func NewIdentityMatrix4() *Matrix4 {
-	return &Matrix4{
+func NewIdentityMatrix4() Matrix4 {
+	return Matrix4{
 		M11: 1.0,
 		M22: 1.0,
 		M33: 1.0,
@@ -24,11 +26,11 @@ func NewIdentityMatrix4() *Matrix4 {
 	}
 }
 
-func NewPerspectiveMatrix4(fovy, aspectRatio, near, far float32) *Matrix4 {
+func NewPerspectiveMatrix4(fovy, aspectRatio, near, far float32) Matrix4 {
 	fovy = fovy * DegreeToRadians
 	nmf := near - far
 	f := 1.0 / Tan(fovy/2)
-	return &Matrix4{
+	return Matrix4{
 		f / aspectRatio, 0, 0, 0,
 		0, f, 0, 0,
 		0, 0, (near + far) / nmf, -1,
@@ -36,17 +38,17 @@ func NewPerspectiveMatrix4(fovy, aspectRatio, near, far float32) *Matrix4 {
 	}
 }
 
-func NewTranslationMatrix4(x, y, z float32) *Matrix4 {
-	return &Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1}
+func NewTranslationMatrix4(x, y, z float32) Matrix4 {
+	return Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1}
 }
 
 // LookAt Matrix right hand
-func NewLookAtMatrix4(eye, center, up Vector3) *Matrix4 {
+func NewLookAtMatrix4(eye, center, up Vector3) Matrix4 {
 	zAxis := (eye.Sub(center)).Nor()
 	xAxis := (up.Cross(zAxis)).Nor()
 	yAxis := zAxis.Cross(xAxis)
 
-	return &Matrix4{
+	return Matrix4{
 		xAxis.X, yAxis.X, zAxis.X, 0,
 		xAxis.Y, yAxis.Y, zAxis.Y, 0,
 		xAxis.Z, yAxis.Z, zAxis.Z, 0,
@@ -54,7 +56,7 @@ func NewLookAtMatrix4(eye, center, up Vector3) *Matrix4 {
 	}
 }
 
-func NewRotationMatrix4(axis Vector3, angle float32) *Matrix4 {
+func NewRotationMatrix4(axis Vector3, angle float32) Matrix4 {
 	axis = axis.Nor()
 	angle = DegreeToRadians * angle
 
@@ -62,13 +64,13 @@ func NewRotationMatrix4(axis Vector3, angle float32) *Matrix4 {
 	s := Sin(angle)
 	k := 1 - c
 
-	return &Matrix4{axis.X*axis.X*k + c, axis.X*axis.Y*k + axis.Z*s, axis.X*axis.Z*k - axis.Y*s, 0,
+	return Matrix4{axis.X*axis.X*k + c, axis.X*axis.Y*k + axis.Z*s, axis.X*axis.Z*k - axis.Y*s, 0,
 		axis.X*axis.Y*k - axis.Z*s, axis.Y*axis.Y*k + c, axis.Y*axis.Z*k + axis.X*s, 0,
 		axis.X*axis.Z*k + axis.Y*s, axis.Y*axis.Z*k - axis.X*s, axis.Z*axis.Z*k + c, 0,
 		0, 0, 0, 1}
 }
 
-func NewOrthoMatrix4(left, right, bottom, top, near, far float32) *Matrix4 {
+func NewOrthoMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
 	xOrtho := 2 / (right - left)
 	yOrtho := 2 / (top - bottom)
 	zOrtho := -2 / (far - near)
@@ -76,17 +78,12 @@ func NewOrthoMatrix4(left, right, bottom, top, near, far float32) *Matrix4 {
 	tx := -(right + left) / (right - left)
 	ty := -(top + bottom) / (top - bottom)
 	tz := -(far + near) / (far - near)
-	return &Matrix4{M11: xOrtho, M22: yOrtho, M33: zOrtho, M41: tx, M42: ty, M43: tz, M44: 1}
-}
-
-func (m1 *Matrix4) Set(m2 *Matrix4) *Matrix4 {
-	(*m1) = (*m2)
-	return m1
+	return Matrix4{M11: xOrtho, M22: yOrtho, M33: zOrtho, M41: tx, M42: ty, M43: tz, M44: 1}
 }
 
 // Multiplicates this matrix with m2 matrix and returns the new matrix.
-func (m1 *Matrix4) Mul(m2 *Matrix4) *Matrix4 {
-	temp := &Matrix4{
+func (m1 Matrix4) Mul(m2 Matrix4) Matrix4 {
+	temp := Matrix4{
 		m1.M11*m2.M11 + m1.M21*m2.M12 + m1.M31*m2.M13 + m1.M41*m2.M14,
 		m1.M12*m2.M11 + m1.M22*m2.M12 + m1.M32*m2.M13 + m1.M42*m2.M14,
 		m1.M13*m2.M11 + m1.M23*m2.M12 + m1.M33*m2.M13 + m1.M43*m2.M14,
@@ -106,7 +103,7 @@ func (m1 *Matrix4) Mul(m2 *Matrix4) *Matrix4 {
 	return temp
 }
 
-func (m *Matrix4) MulVec3(vec Vector3) Vector3 {
+func (m Matrix4) MulVec3(vec Vector3) Vector3 {
 	tmp := Vector3{}
 	tmp.X = vec.X*m.M11 + vec.Y*m.M21 + vec.Z*m.M31 + m.M41
 	tmp.Y = vec.X*m.M12 + vec.Y*m.M22 + vec.Z*m.M32 + m.M42
@@ -114,7 +111,7 @@ func (m *Matrix4) MulVec3(vec Vector3) Vector3 {
 	return tmp
 }
 
-func (m *Matrix4) MulVec4(vec Vector4) Vector4 {
+func (m Matrix4) MulVec4(vec Vector4) Vector4 {
 	tmp := Vector4{}
 	tmp.X = vec.X*m.M11 + vec.Y*m.M21 + vec.Z*m.M31 + vec.W*m.M41
 	tmp.Y = vec.X*m.M12 + vec.Y*m.M22 + vec.Z*m.M32 + vec.W*m.M42
@@ -123,8 +120,8 @@ func (m *Matrix4) MulVec4(vec Vector4) Vector4 {
 	return tmp
 }
 
-func (m *Matrix4) Scale(scalar Vector3) *Matrix4 {
-	s := &Matrix4{
+func (m Matrix4) Scale(scalar Vector3) Matrix4 {
+	s := Matrix4{
 		M11: scalar.X,
 		M22: scalar.Y,
 		M33: scalar.Z,
@@ -133,13 +130,13 @@ func (m *Matrix4) Scale(scalar Vector3) *Matrix4 {
 	return m.Mul(s)
 }
 
-func (m *Matrix4) Invert() (*Matrix4, error) {
+func (m Matrix4) Invert() (Matrix4, error) {
 	det := m.Determinant()
 	if det == 0 {
-		return nil, errors.New("non-invertible matrix")
+		return Matrix4{}, errors.New("non-invertible matrix")
 	}
 
-	tmp := &Matrix4{}
+	tmp := Matrix4{}
 
 	tmp.M11 = m.M32*m.M43*m.M24 - m.M42*m.M33*m.M24 + m.M42*m.M23*m.M34 - m.M22*m.M43*m.M34 - m.M32*m.M23*m.M44 + m.M22*m.M33*m.M44
 	tmp.M21 = m.M41*m.M33*m.M24 - m.M31*m.M43*m.M24 - m.M41*m.M23*m.M34 + m.M21*m.M43*m.M34 + m.M31*m.M23*m.M44 - m.M21*m.M33*m.M44
@@ -180,7 +177,7 @@ func (m *Matrix4) Invert() (*Matrix4, error) {
 }
 
 // The determinant of this matrix.
-func (m *Matrix4) Determinant() float32 {
+func (m Matrix4) Determinant() float32 {
 	return m.M14*m.M23*m.M32*m.M41 -
 		m.M13*m.M24*m.M32*m.M41 -
 		m.M14*m.M22*m.M33*m.M41 +
@@ -208,7 +205,7 @@ func (m *Matrix4) Determinant() float32 {
 }
 
 // Equal to gluProject
-func Project(obj Vector3, modelview, projection *Matrix4, viewport Vector4) Vector3 {
+func Project(obj Vector3, modelview, projection Matrix4, viewport Vector4) Vector3 {
 	// Modelview transform
 	ft0 := modelview.M11*obj.X + modelview.M21*obj.Y + modelview.M31*obj.Z + modelview.M41
 	ft1 := modelview.M12*obj.X + modelview.M22*obj.Y + modelview.M32*obj.Z + modelview.M42
@@ -240,7 +237,7 @@ func Project(obj Vector3, modelview, projection *Matrix4, viewport Vector4) Vect
 	return Vec3(x, y, z)
 }
 
-func UnProject(window Vector3, modelview, projection *Matrix4, viewport Vector4) (Vector3, error) {
+func UnProject(window Vector3, modelview, projection Matrix4, viewport Vector4) (Vector3, error) {
 	a := projection.Mul(modelview)
 
 	// Compute the inverse of matrix a

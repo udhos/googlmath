@@ -42,6 +42,8 @@ func (s *S) TestQuaternionScale(c *C) {
 	}
 }
 
+// TODO Dot
+
 type TestValue_Q_F32 struct {
 	v Quaternion
 	e float32
@@ -104,6 +106,15 @@ func (s *S) TestQuaternionEq(c *C) {
 		}
 	}
 }
+
+// TODO EulerAngles
+// TODO Conjugate
+// TODO FromAxis
+// TODO FromMatrix
+// TODO FromAxes
+// TODO FromCross
+// TODO Slerp
+// TODO Matrix
 
 func (s *S) TestQuaternionString(c *C) {
 	tests := []Quaternion{
