@@ -75,17 +75,13 @@ type ProjectMatrix4TestValue struct {
 	Expected Vector3
 }
 
-func (s *S) TestNewMatrix4(c *C) {
-	c.Assert(NewMatrix4(), DeepEquals, ZMatrix4)
-}
-
 func (s *S) TestMatrix4Perspective(c *C) {
 	tests := []MatrixPerspectiveTestValue{
 		MatrixPerspectiveTestValue{45.0, 4.0 / 3.0, 0.1, 100.0, Matrix4{1.810660, 0.0, 0.0, 0.0, 0.0, 2.4142134, 0.0, 0.0, 0.0, 0.0, -1.002002, -1.0, 0.0, 0.0, -0.2002002, 0.0}},
 		MatrixPerspectiveTestValue{90.0, 16.0 / 9.0, -1.0, 1.0, Matrix4{0.562500, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -0.0, -1.0, 0.0, 0.0, 1.0, 0.0}},
 	}
 	for _, value := range tests {
-		matrix := NewPerspectiveMatrix4(value.Fov, value.AspectRatio, value.Near, value.Far)
+		matrix := PerspectiveMatrix4(value.Fov, value.AspectRatio, value.Near, value.Far)
 		c.Check(matrix, Matrix4Check, value.Expected)
 	}
 }
@@ -95,7 +91,7 @@ func (s *S) TestMatrix4LookAt(c *C) {
 		MatrixLookAtTestValue{Vec3(4, 3, 3), Vec3(0, 0, 0), Vec3(0, 1, 0), Matrix4{0.600000, -0.411597, 0.685994, 0.0, 0.0, 0.857493, 0.514496, 0.0, -0.800000, -0.308697, 0.514496, 0.0, 0.0, 0.0, -5.830953, 1.0}},
 	}
 	for _, value := range tests {
-		matrix := NewLookAtMatrix4(value.Eye, value.Center, value.Up)
+		matrix := LookAtMatrix4(value.Eye, value.Center, value.Up)
 		c.Check(matrix, Matrix4Check, value.Expected)
 	}
 }
@@ -107,7 +103,7 @@ func (s *S) TestMatrix4Translation(c *C) {
 	}
 	for _, value := range tests {
 		translation := value.Translation
-		matrix := NewTranslationMatrix4(translation.X, translation.Y, translation.Z)
+		matrix := TranslationMatrix4(translation.X, translation.Y, translation.Z)
 		c.Check(matrix, Matrix4Check, value.Expected)
 	}
 }
@@ -118,7 +114,7 @@ func (s *S) TestMatrix4Rotation(c *C) {
 		MatrixRotationTestValue{Vec3(2.0, 2.5, 0.0), -45.0, Matrix4{0.821407, 0.142875, 0.552158, 0.0, 0.142875, 0.885700, -0.441726, 0.0, -0.552158, 0.441726, 0.707107, 0.0, 0.0, 0.0, 0.0, 1.0}},
 	}
 	for _, value := range tests {
-		matrix := NewRotationMatrix4(value.Axis, value.Angle)
+		matrix := RotationMatrix4(value.Axis, value.Angle)
 		c.Check(matrix, Matrix4Check, value.Expected)
 	}
 }
@@ -129,7 +125,7 @@ func (s *S) TestMatrix4Ortho(c *C) {
 		MatrixOrthoTestValue{0.0, 10.0, 0.0, 10.0, 0.0, 100.0, Matrix4{0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, -0.02, 0.0, -1.0, -1.0, -1.0, 1.0}},
 	}
 	for _, value := range tests {
-		matrix := NewOrthoMatrix4(value.Left, value.Right, value.Bottom, value.Top, value.Near, value.Far)
+		matrix := OrthoMatrix4(value.Left, value.Right, value.Bottom, value.Top, value.Near, value.Far)
 		c.Check(matrix, Matrix4Check, value.Expected)
 	}
 }
@@ -179,7 +175,7 @@ func (s *S) TestMatrix4MulVec4(c *C) {
 
 func (s *S) TestMatrix4Scale(c *C) {
 	tests := []MatrixScaleTestValue{
-		MatrixScaleTestValue{Vec3(2.0, 3.3, -2.2), NewIdentityMatrix4(), Matrix4{2.0, 0.0, 0.0, 0.0, 0.0, 3.3, 0.0, 0.0, -0.0, -0.0, -2.2, -0.0, 0.0, 0.0, 0.0, 1.0}},
+		MatrixScaleTestValue{Vec3(2.0, 3.3, -2.2), IdentityMatrix4(), Matrix4{2.0, 0.0, 0.0, 0.0, 0.0, 3.3, 0.0, 0.0, -0.0, -0.0, -2.2, -0.0, 0.0, 0.0, 0.0, 1.0}},
 		MatrixScaleTestValue{Vec3(2.0, 3.3, -2.2), Matrix4{0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, -0.02, 0.0, -1.0, -1.0, -1.0, 1.0}, Matrix4{0.4, 0.0, 0.0, 0.0, 0.0, 0.66, 0.0, 0.0, -0.0, -0.0, 0.044, -0.0, -1.0, -1.0, -1.0, 1.0}},
 	}
 	for _, value := range tests {
@@ -190,7 +186,7 @@ func (s *S) TestMatrix4Scale(c *C) {
 
 func (s *S) TestMatrix4Invert(c *C) {
 	tests := []MatrixInvertTestValue{
-		MatrixInvertTestValue{NewIdentityMatrix4(), NewIdentityMatrix4()},
+		MatrixInvertTestValue{IdentityMatrix4(), IdentityMatrix4()},
 		MatrixInvertTestValue{Matrix4{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -3.0, 2.2, 15.0, 1.0}, Matrix4{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, -2.2, -15.0, 1.0}},
 	}
 	for _, value := range tests {
@@ -203,7 +199,7 @@ func (s *S) TestMatrix4Invert(c *C) {
 func (s *S) TestMatrix4Determinant(c *C) {
 	tests := []MatrixDeterminantTestValue{
 		MatrixDeterminantTestValue{Matrix4{0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, -0.02, 0.0, -1.0, -1.0, -1.0, 1.0}, -0.0008},
-		MatrixDeterminantTestValue{NewIdentityMatrix4(), 1.0},
+		MatrixDeterminantTestValue{IdentityMatrix4(), 1.0},
 		MatrixDeterminantTestValue{Matrix4{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -3.0, 2.2, 15.0, 1.0}, 1.0},
 	}
 	for _, value := range tests {

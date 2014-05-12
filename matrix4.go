@@ -13,11 +13,7 @@ type Matrix4 struct {
 
 var ZMatrix4 = Matrix4{}
 
-func NewMatrix4() Matrix4 {
-	return Matrix4{}
-}
-
-func NewIdentityMatrix4() Matrix4 {
+func IdentityMatrix4() Matrix4 {
 	return Matrix4{
 		M11: 1.0,
 		M22: 1.0,
@@ -26,7 +22,7 @@ func NewIdentityMatrix4() Matrix4 {
 	}
 }
 
-func NewPerspectiveMatrix4(fovy, aspectRatio, near, far float32) Matrix4 {
+func PerspectiveMatrix4(fovy, aspectRatio, near, far float32) Matrix4 {
 	fovy = fovy * DegreeToRadians
 	nmf := near - far
 	f := 1.0 / Tan(fovy/2)
@@ -38,12 +34,12 @@ func NewPerspectiveMatrix4(fovy, aspectRatio, near, far float32) Matrix4 {
 	}
 }
 
-func NewTranslationMatrix4(x, y, z float32) Matrix4 {
+func TranslationMatrix4(x, y, z float32) Matrix4 {
 	return Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1}
 }
 
 // LookAt Matrix right hand
-func NewLookAtMatrix4(eye, center, up Vector3) Matrix4 {
+func LookAtMatrix4(eye, center, up Vector3) Matrix4 {
 	zAxis := (eye.Sub(center)).Nor()
 	xAxis := (up.Cross(zAxis)).Nor()
 	yAxis := zAxis.Cross(xAxis)
@@ -56,7 +52,7 @@ func NewLookAtMatrix4(eye, center, up Vector3) Matrix4 {
 	}
 }
 
-func NewRotationMatrix4(axis Vector3, angle float32) Matrix4 {
+func RotationMatrix4(axis Vector3, angle float32) Matrix4 {
 	axis = axis.Nor()
 	angle = DegreeToRadians * angle
 
@@ -70,7 +66,7 @@ func NewRotationMatrix4(axis Vector3, angle float32) Matrix4 {
 		0, 0, 0, 1}
 }
 
-func NewOrthoMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
+func OrthoMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
 	xOrtho := 2 / (right - left)
 	yOrtho := 2 / (top - bottom)
 	zOrtho := -2 / (far - near)

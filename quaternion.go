@@ -177,7 +177,7 @@ func (q Quaternion) Matrix() Matrix4 {
 	zz := q.Z * q.Z
 	zw := q.Z * q.W
 	// Set matrix from quaternion
-	matrix := NewIdentityMatrix4()
+	matrix := IdentityMatrix4()
 	matrix.M11 = 1 - 2*(yy+zz)
 	matrix.M21 = 2 * (xy - zw)
 	matrix.M31 = 2 * (xz + yw)
