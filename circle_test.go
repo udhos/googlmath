@@ -19,6 +19,6 @@ func (s *S) TestCircleContains(c *C) {
 
 	// Contains
 	for i := range containTestTable {
-		c.Assert(circle.Contains(containTestTable[i].X, containTestTable[i].Y), Equals, containTestTable[i].Expected)
+		c.Assert(circle.Contains(Vec2(containTestTable[i].X, containTestTable[i].Y)), Equals, containTestTable[i].Expected)
 	}
 }

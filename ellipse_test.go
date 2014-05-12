@@ -15,10 +15,10 @@ type TestValue_4F32_Ell struct {
 func (s *S) TestEllipseEll(c *C) {
 	tests := []TestValue_4F32_Ell{
 		{
-			0, 0, 0, 0, Ellipse{0, 0, 0, 0},
+			0, 0, 0, 0, Ellipse{ZV2, 0.0, 0.0},
 		},
 		{
-			-1.2, -3.3, 1, 2, Ellipse{-1.2, -3.3, 1, 2},
+			-1.2, -3.3, 1, 2, Ellipse{Vec2(-1.2, -3.3), 1, 2},
 		},
 	}
 	for _, t := range tests {
@@ -36,17 +36,17 @@ type TestValue_Ell2F32_B struct {
 
 func (s *S) TestEllipseContains(c *C) {
 	tests := []TestValue_Ell2F32_B{
-		{Ellipse{0, 0, 1, 1}, 0, 0, true},
-		{Ellipse{0, 0, 1, 1}, 1, 0, true},
-		{Ellipse{0, 0, 1, 1}, -2, -2, false},
-		{Ellipse{0, 0, 1, 1}, 2, 0, false},
-		{Ellipse{0, 0, 0, 1}, 2, 0, false},
-		{Ellipse{0, 0, 1, 0}, 2, 0, false},
-		{Ellipse{1, 2, 0, 0}, 2, 0, false},
+		{Ellipse{ZV2, 1, 1}, 0, 0, true},
+		{Ellipse{ZV2, 1, 1}, 1, 0, true},
+		{Ellipse{ZV2, 1, 1}, -2, -2, false},
+		{Ellipse{ZV2, 1, 1}, 2, 0, false},
+		{Ellipse{ZV2, 0, 1}, 2, 0, false},
+		{Ellipse{ZV2, 1, 0}, 2, 0, false},
+		{Ellipse{Vec2(1, 2), 0, 0}, 2, 0, false},
 	}
 	// Contains
 	for _, t := range tests {
-		obtained := t.ell.Contains(t.f0, t.f1)
+		obtained := t.ell.Contains(Vec2(t.f0, t.f1))
 		c.Assert(obtained, Equals, t.e)
 	}
 }
