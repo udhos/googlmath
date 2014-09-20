@@ -27,18 +27,19 @@ func NewFrustum() *Frustum {
 	return &Frustum{planePoints: make([]Vector3, len(clipSpacePlanePoints))}
 }
 
-func (f *Frustum) Update(invProjectionView *Matrix4) {
+func (f *Frustum) Update(invProjectionView Matrix4) Matrix4 {
 	for i := range clipSpacePlanePoints {
 		f.planePoints[i] = clipSpacePlanePoints[i]
 	}
 	// TODO
-
+	
 	f.Near.Set(f.planePoints[1], f.planePoints[0], f.planePoints[2])
 	f.Far.Set(f.planePoints[4], f.planePoints[5], f.planePoints[7])
 	f.Left.Set(f.planePoints[0], f.planePoints[4], f.planePoints[3])
 	f.Right.Set(f.planePoints[5], f.planePoints[1], f.planePoints[6])
 	f.Top.Set(f.planePoints[2], f.planePoints[3], f.planePoints[6])
 	f.Bottom.Set(f.planePoints[4], f.planePoints[0], f.planePoints[1])
+	return invProjectionView
 }
 
 // Returns whether the point is in the frustum.

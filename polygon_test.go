@@ -5,11 +5,12 @@ import (
 )
 
 func (s *S) TestPolygonTransformedVertices(c *C) {
-	poly, _ := NewPolygon([]float32{
+	poly, err := NewPolygon([]float32{
 		-1.0, 0.0,
 		0.0, 1.0,
 		1.0, 0.0,
 	})
+	c.Assert(err, IsNil)
 	expected := []float32{
 		-1.0, 0.0,
 		0.0, 1.0,

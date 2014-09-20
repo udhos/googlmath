@@ -66,6 +66,7 @@ func RotationMatrix4(axis Vector3, angle float32) Matrix4 {
 		0, 0, 0, 1}
 }
 
+// NOTE: Like glOrtho
 func OrthoMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
 	xOrtho := 2 / (right - left)
 	yOrtho := 2 / (top - bottom)
@@ -75,6 +76,16 @@ func OrthoMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
 	ty := -(top + bottom) / (top - bottom)
 	tz := -(far + near) / (far - near)
 	return Matrix4{M11: xOrtho, M22: yOrtho, M33: zOrtho, M41: tx, M42: ty, M43: tz, M44: 1}
+}
+
+// NOTE: Like glFrustum or glmFrustum
+func FrustumMatrix4(left, right, bottom, top, near, far float32) Matrix4 {
+	return Matrix4{
+		M11: 2 * near / (right - left), M12: 0, M13: (right + left) / (right - left), M14: 0,
+		M21: 0, M22: (2 * near) / (top -bottom), M23: (top + bottom) / (top - bottom), M24: 0,
+		M31: 0, M32: 0, M33: -((far + near) / (far - near)), M34: -((2 * far * near) / (far - near)),
+		M41: 0, M42: 0, M43: -1, M44: 0,
+	}
 }
 
 // Multiplicates this matrix with m2 matrix and returns the new matrix.

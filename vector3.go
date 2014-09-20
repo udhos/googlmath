@@ -89,9 +89,12 @@ func (vec Vector3) Lerp(target Vector3, alpha float32) Vector3 {
 	if alpha > 1.0 || alpha < 0 {
 		panic("alpha is not in the range [0:1]")
 	}
-
+	k := alpha
+	if vec.Dot(target) < 0 {
+		k = -alpha
+	}
 	v := vec.Scale(1.0 - alpha)
-	return v.Add(target.Scale(alpha))
+	return v.Add(target.Scale(k))
 }
 
 // Spherically interpolates between this vector and the target vector by alpha which is in the range [0,1].

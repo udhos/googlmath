@@ -81,6 +81,8 @@ func (s *S) TestVector2Angle(c *C) {
 	c.Assert(vec.Angle(), Equals, float32(45.0))
 }
 
+// TODO SetAngle
+
 func (s *S) TestVector2Rotate(c *C) {
 	var angle float32 = 45
 	var x float32 = 5
@@ -116,6 +118,10 @@ func (s *S) TestVector2Faceforward(c *C) {
 	result := v.Faceforward(i, n)
 	c.Check(result, Equals, expected)
 }
+
+// TODO IsUnit
+// TODO IsZero
+// TODO String
 
 // ### Benchmarks ###
 
